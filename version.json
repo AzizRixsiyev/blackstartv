@@ -1,6 +1,6 @@
 {
-  "versionCode": 25,
-  "versionName": "1.6.4",
+  "versionCode": 26,
+  "versionName": "1.6.5",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Sozlamalar ro'yxati to'liq ko'rinadi"
+  "notes": "Menyu shaffofligini sozlash"
 }
