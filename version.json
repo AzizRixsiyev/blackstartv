@@ -1,6 +1,6 @@
 {
-  "versionCode": 16,
-  "versionName": "1.5.0",
+  "versionCode": 17,
+  "versionName": "1.5.1",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Avtomatik yangilanish qo'shildi"
+  "notes": "Versiya raqami ID yonida ko'rinadi"
 }
