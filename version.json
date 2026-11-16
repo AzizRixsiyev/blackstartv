@@ -1,6 +1,6 @@
 {
-  "versionCode": 20,
-  "versionName": "1.5.4",
+  "versionCode": 21,
+  "versionName": "1.6.0",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Ochilishdagi kulrang belgi olib tashlandi"
+  "notes": "Teledastur (EPG) ishlaydi, sifat doim eng yuqori"
 }
