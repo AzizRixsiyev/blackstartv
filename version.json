@@ -1,6 +1,6 @@
 {
-  "versionCode": 23,
-  "versionName": "1.6.2",
+  "versionCode": 24,
+  "versionName": "1.6.3",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "SD kanallar sifati: pristavkaning o'z dekoderi ishlatiladi"
+  "notes": "Arxiv topilmasa sababi ko'rsatiladi"
 }
