@@ -1,6 +1,6 @@
 {
-  "versionCode": 18,
-  "versionName": "1.5.2",
+  "versionCode": 19,
+  "versionName": "1.5.3",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Qo'llanmaydigan kanallarni VLC da ochish"
+  "notes": "Dastur ma'lumoti bo'lmasa ham arxivni soat bo'yicha ko'rish"
 }
