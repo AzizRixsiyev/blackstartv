@@ -1,6 +1,6 @@
 {
-  "versionCode": 21,
-  "versionName": "1.6.0",
+  "versionCode": 22,
+  "versionName": "1.6.1",
   "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Teledastur (EPG) ishlaydi, sifat doim eng yuqori"
+  "notes": "SD (576) kanallarda chiziqlar tekislandi"
 }
