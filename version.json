@@ -1,6 +1,6 @@
 {
-  "versionCode": 26,
-  "versionName": "1.6.5",
-  "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
-  "notes": "Menyu shaffofligini sozlash"
+ "versionCode": 27,
+ "versionName": "1.6.6",
+ "apk": "https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/BlackStarTV.apk",
+ "notes": "Token orqali qo'shish: Sozlamalar → IPTV token"
 }
