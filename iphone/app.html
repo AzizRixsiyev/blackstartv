@@ -1,0 +1,102 @@
+<!doctype html><html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Black Star TV"><meta name="theme-color" content="#0b0b0d">
+<link rel="apple-touch-icon" href="icon.png"><link rel="icon" href="icon.png">
+<title>Black Star TV</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0b0b0d;color:#eee;font:16px -apple-system,BlinkMacSystemFont,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{position:sticky;top:0;z-index:5;background:#0b0b0d;padding:10px 12px 6px;border-bottom:1px solid #1d1d22}
+.top{display:flex;align-items:center;gap:10px}.top img{width:32px;height:32px;border-radius:8px}
+.top b{font-size:19px;flex:1}.top b span{color:#f5b400}
+.ib{background:#1b1b20;border:0;color:#ddd;border-radius:10px;padding:8px 11px;font-size:15px}
+#q{width:100%;margin-top:9px;padding:10px 12px;border-radius:10px;border:0;background:#1b1b20;color:#fff;font-size:16px}
+#grp{display:flex;gap:6px;overflow-x:auto;padding:9px 0 3px;scrollbar-width:none}#grp::-webkit-scrollbar{display:none}
+.g{flex:none;padding:7px 12px;border-radius:16px;background:#1b1b20;color:#bbb;font-size:14px;white-space:nowrap}.g.on{background:#f5b400;color:#000;font-weight:600}
+#list{padding:4px 0 30px}
+.ch{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid #16161a}
+.ch:active{background:#1b1b20}
+.lg{width:54px;height:36px;flex:none;background:#16161a center/contain no-repeat;border-radius:6px}
+.nm{flex:1;min-width:0}.nm div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nm small{color:#888;font-size:12px}
+.st{background:none;border:0;color:#555;font-size:22px;padding:4px}.st.on{color:#f5b400}
+.ar{background:#1b1b20;border:0;color:#f5b400;border-radius:8px;padding:6px 8px;font-size:13px}
+.box{max-width:460px;margin:12vh auto 0;padding:20px}
+.box h2{margin:0 0 6px}.box p{color:#aaa;line-height:1.45}
+.box input{width:100%;padding:14px;border-radius:12px;border:0;background:#1b1b20;color:#fff;font-size:18px;margin:10px 0}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:#f5b400;color:#000;font-size:17px;font-weight:700;text-align:center;text-decoration:none}
+.btn.gr{background:#1b1b20;color:#eee;font-weight:500;margin-top:10px}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;display:none;align-items:flex-end}
+#sheet>div{background:#151519;width:100%;max-height:75vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
+#sheet h3{margin:4px 0 10px}.sl{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.sl button{padding:11px 0;border:0;border-radius:9px;background:#22222a;color:#eee;font-size:15px}
+.day{color:#888;margin:12px 0 6px;font-size:13px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222;color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;display:none;z-index:30;max-width:90%;text-align:center}
+.hint{color:#888;font-size:13px;padding:10px 12px}
+</style></head><body>
+<div id="app"></div><div id="sheet" onclick="if(event.target===this)closeSheet()"><div id="sheetIn"></div></div><div id="toast"></div>
+<script>
+'use strict';
+var TPL='https://1lot.tv/pl/{token}/10/only4tv.m3u8', VLC_STORE='https://apps.apple.com/app/vlc-media-player/id650377962';
+var $=function(i){return document.getElementById(i)}, st=function(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem('bsi.'+k));localStorage.setItem('bsi.'+k,JSON.stringify(v))}catch(e){}};
+var chans=[], groups=[], cur=st('grp')||'Hammasi', favs=st('favs')||{}, q='';
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m,ms){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display='none'},ms||2500)}
+function attrs(s){var re=/([\w-]+)\s*=\s*"([^"]*)"/g,m,o={};while((m=re.exec(s)))o[m[1].toLowerCase()]=m[2];return o}
+function parse(t){var L=t.replace(/\r/g,'').split('\n'),out=[],c=null,i,l,a,k;
+ for(i=0;i<L.length;i++){l=L[i].trim();if(!l)continue;
+  if(/^#EXTINF/i.test(l)){a=attrs(l);k=l.lastIndexOf('",');k=k>=0?k+1:l.indexOf(',');
+   c={name:(k>=0?l.substring(k+1).trim():'')||a['tvg-name']||'Kanal',logo:(a['tvg-logo']||'').replace(/^http:\/\/1lot\.tv/,'https://1lot.tv'),group:a['group-title']||'Boshqa',days:parseFloat(a['catchup-days']||'0')||0};continue}
+  if(/^#EXTGRP:/i.test(l)){if(c&&c.group==='Boshqa')c.group=l.substring(8).trim();continue}
+  if(l.charAt(0)==='#')continue;
+  if(c){c.url=l;c.id=c.name+'|'+l.split('?')[0];out.push(c);c=null}}
+ return out}
+function token(){return st('token')||''}
+function start(){var u=new URLSearchParams(location.search).get('t');if(u){st('token',u.trim());history.replaceState(null,'',location.pathname)}
+ if(!token())return login();load()}
+function login(err){$('app').innerHTML='<div class="box"><img src="icon.png" width="64" style="border-radius:14px"><h2>Black Star TV</h2>'+
+ '<p>Tokeningizni kiriting. Kanallar iPhone\'dagi <b>VLC</b> pleyerida ochiladi.</p>'+(err?'<p style="color:#ff6b6b">'+esc(err)+'</p>':'')+
+ '<input id="tk" placeholder="Token, masalan: fJr1biXQcd" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(token())+'">'+
+ '<button class="btn" onclick="saveTok()">Kirish</button>'+
+ '<a class="btn gr" href="'+VLC_STORE+'">1-qadam: VLC ni o\'rnatish (bepul)</a>'+
+ '<p style="font-size:13px">Maslahat: Safari\'da «Ulashish» → «Ekran boshiga qo\'shish» ni bosing — ilovadek ochiladi.</p></div>'}
+function saveTok(){var v=$('tk').value.replace(/\s+/g,'');if(!/^[A-Za-z0-9]{6,24}$/.test(v)){toast('Token faqat harf va raqamlardan iborat');return}st('token',v);load()}
+function load(){$('app').innerHTML='<div class="box"><p>Kanallar yuklanmoqda...</p></div>';
+ var cache=st('cache');
+ fetch(TPL.replace('{token}',encodeURIComponent(token())),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Server javobi: '+r.status);return r.text()}).then(function(t){
+  var c=parse(t);if(!c.length){login('Bu token bo\'yicha kanal topilmadi: token noto\'g\'ri yoki obuna tugagan.');return}
+  try{localStorage.setItem('bsi.cache',JSON.stringify({tk:token(),c:c}))}catch(e){}show(c)
+ }).catch(function(e){if(cache&&cache.tk===token()){show(cache.c);toast('Internet yo\'q — saqlangan ro\'yxat')}else login('Yuklanmadi: '+e.message)})}
+function show(c){chans=c;groups=['⭐ Sevimlilar','Hammasi'];c.forEach(function(x){if(groups.indexOf(x.group)<0)groups.push(x.group)});
+ if(groups.indexOf(cur)<0)cur='Hammasi';
+ $('app').innerHTML='<header><div class="top"><img src="icon.png"><b>Black Star <span>TV</span></b><button class="ib" onclick="load()">⟳</button><button class="ib" onclick="settings()">⚙</button></div>'+
+ '<input id="q" type="search" placeholder="Kanal qidirish ('+c.length+' ta)" oninput="q=this.value.toLowerCase();render()"><div id="grp"></div></header><div id="list"></div>';
+ render()}
+function render(){$('grp').innerHTML=groups.map(function(g){return'<div class="g'+(g===cur?' on':'')+'" onclick="setG(this)" data-g="'+esc(g)+'">'+esc(g)+'</div>'}).join('');
+ var l=chans.filter(function(x){if(q)return x.name.toLowerCase().indexOf(q)>=0;if(cur==='Hammasi')return true;if(cur==='⭐ Sevimlilar')return favs[x.id];return x.group===cur});
+ var h=l.slice(0,400).map(function(x){var i=chans.indexOf(x);return'<div class="ch" onclick="play('+i+')"><div class="lg"'+(x.logo?' style="background-image:url(\''+esc(x.logo)+'\')"':'')+'></div>'+
+  '<div class="nm"><div>'+esc(x.name)+'</div><small>'+esc(x.group)+'</small></div>'+(x.days?'<button class="ar" onclick="event.stopPropagation();arch('+i+')">⏪ Arxiv</button>':'')+
+  '<button class="st'+(favs[x.id]?' on':'')+'" onclick="event.stopPropagation();fav('+i+',this)">★</button></div>'}).join('');
+ if(!l.length)h='<div class="hint">'+(cur==='⭐ Sevimlilar'&&!q?'Sevimli kanal yo\'q. Kanal yonidagi ★ ni bosing.':'Hech narsa topilmadi')+'</div>';
+ if(l.length>400)h+='<div class="hint">Yana '+(l.length-400)+' ta — qidiruvdan foydalaning</div>';
+ $('list').innerHTML=h}
+function setG(el){cur=el.getAttribute('data-g');st('grp',cur);q='';$('q').value='';render();window.scrollTo(0,0)}
+function fav(i,el){var x=chans[i];if(favs[x.id])delete favs[x.id];else favs[x.id]=1;st('favs',favs);el.classList.toggle('on')}
+function openVlc(url,title){st('last',title);var t=Date.now();
+ location.href='vlc-x-callback://x-callback-url/stream?url='+encodeURIComponent(url);
+ setTimeout(function(){if(!document.hidden&&Date.now()-t<2600){$('sheetIn').innerHTML='<h3>VLC ochilmadi</h3><p style="color:#aaa">iPhone\'da VLC pleyeri o\'rnatilmagan bo\'lishi mumkin. O\'rnating va kanalni qayta bosing.</p><a class="btn" href="'+VLC_STORE+'">VLC ni o\'rnatish (bepul)</a><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}},2000)}
+function play(i){openVlc(chans[i].url,chans[i].name)}
+function pad(n){return(n<10?'0':'')+n}
+function arch(i){var x=chans[i],now=new Date(),h='<h3>⏪ '+esc(x.name)+'</h3><p style="color:#aaa;margin:0 0 4px;font-size:14px">Qaysi vaqtdan boshlab ko\'rasiz?</p>',days=Math.min(x.days,7),d,s,last='';
+ for(var k=1;k<=days*24;k++){d=new Date(now.getTime()-k*3600000);d.setMinutes(0,0,0);s=d.toDateString();
+  if(s!==last){h+=(last?'</div>':'')+'<div class="day">'+(s===now.toDateString()?'Bugun':(k<48&&s===new Date(now.getTime()-86400000).toDateString()?'Kecha':d.getDate()+'.'+pad(d.getMonth()+1)))+'</div><div class="sl">';last=s}
+  h+='<button onclick="archGo('+i+','+d.getTime()+')">'+pad(d.getHours())+':00</button>'}
+ $('sheetIn').innerHTML=h+'</div><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}
+function archGo(i,ms){var x=chans[i],s=Math.floor(ms/1000),n=Math.floor(Date.now()/1000);closeSheet();
+ openVlc(x.url+(x.url.indexOf('?')>=0?'&':'?')+'utc='+s+'&lutc='+n,x.name)}
+function closeSheet(){$('sheet').style.display='none'}
+function settings(){$('sheetIn').innerHTML='<h3>Sozlamalar</h3><p style="color:#aaa;font-size:14px">Token: <b style="color:#eee">'+esc(token())+'</b></p>'+
+ '<button class="btn" onclick="closeSheet();login()">Tokenni almashtirish</button><a class="btn gr" href="'+VLC_STORE+'">VLC ni o\'rnatish</a>'+
+ '<p style="color:#888;font-size:13px">Kanal bosilganda VLC ochiladi. Ro\'yxatga qaytish uchun ekranning chap yuqori burchagidagi «◀ Safari» ni bosing.</p><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}
+start();
+</script></body></html>
