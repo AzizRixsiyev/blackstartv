@@ -1,102 +1,4784 @@
-<!doctype html><html lang="uz"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Black Star TV"><meta name="theme-color" content="#0b0b0d">
-<link rel="apple-touch-icon" href="icon.png"><link rel="icon" href="icon.png">
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Black Star TV</title>
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#0b0b0d;color:#eee;font:16px -apple-system,BlinkMacSystemFont,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-header{position:sticky;top:0;z-index:5;background:#0b0b0d;padding:10px 12px 6px;border-bottom:1px solid #1d1d22}
-.top{display:flex;align-items:center;gap:10px}.top img{width:32px;height:32px;border-radius:8px}
-.top b{font-size:19px;flex:1}.top b span{color:#f5b400}
-.ib{background:#1b1b20;border:0;color:#ddd;border-radius:10px;padding:8px 11px;font-size:15px}
-#q{width:100%;margin-top:9px;padding:10px 12px;border-radius:10px;border:0;background:#1b1b20;color:#fff;font-size:16px}
-#grp{display:flex;gap:6px;overflow-x:auto;padding:9px 0 3px;scrollbar-width:none}#grp::-webkit-scrollbar{display:none}
-.g{flex:none;padding:7px 12px;border-radius:16px;background:#1b1b20;color:#bbb;font-size:14px;white-space:nowrap}.g.on{background:#f5b400;color:#000;font-weight:600}
-#list{padding:4px 0 30px}
-.ch{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid #16161a}
-.ch:active{background:#1b1b20}
-.lg{width:54px;height:36px;flex:none;background:#16161a center/contain no-repeat;border-radius:6px}
-.nm{flex:1;min-width:0}.nm div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nm small{color:#888;font-size:12px}
-.st{background:none;border:0;color:#555;font-size:22px;padding:4px}.st.on{color:#f5b400}
-.ar{background:#1b1b20;border:0;color:#f5b400;border-radius:8px;padding:6px 8px;font-size:13px}
-.box{max-width:460px;margin:12vh auto 0;padding:20px}
-.box h2{margin:0 0 6px}.box p{color:#aaa;line-height:1.45}
-.box input{width:100%;padding:14px;border-radius:12px;border:0;background:#1b1b20;color:#fff;font-size:18px;margin:10px 0}
-.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:#f5b400;color:#000;font-size:17px;font-weight:700;text-align:center;text-decoration:none}
-.btn.gr{background:#1b1b20;color:#eee;font-weight:500;margin-top:10px}
-#sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;display:none;align-items:flex-end}
-#sheet>div{background:#151519;width:100%;max-height:75vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom))}
-#sheet h3{margin:4px 0 10px}.sl{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.sl button{padding:11px 0;border:0;border-radius:9px;background:#22222a;color:#eee;font-size:15px}
-.day{color:#888;margin:12px 0 6px;font-size:13px}
-#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222;color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;display:none;z-index:30;max-width:90%;text-align:center}
-.hint{color:#888;font-size:13px;padding:10px 12px}
-</style></head><body>
-<div id="app"></div><div id="sheet" onclick="if(event.target===this)closeSheet()"><div id="sheetIn"></div></div><div id="toast"></div>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Black Star TV"><meta name="theme-color" content="#000">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AzizRixsiyev/blackstartv/main/iphone/icon.png">
+<style>/* Black Star TV — 1920x1080 asosida, ekranga moslab kattalashtiriladi */
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+body { font-family: "Roboto", "SamsungOne", "Segoe UI", Arial, sans-serif; color: #fff; -webkit-user-select: none; user-select: none; }
+body.bg-black { background: #000; }
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; -webkit-transform-origin: 0 0; transform-origin: 0 0; }
+.hidden { display: none !important; }
+
+:root { --gold: #f5b400; --gold2: #ffd451; }
+
+#video { display: none; position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: #000; object-fit: contain; }
+#video.fit-fill { object-fit: fill; }
+#video.fit-zoom { object-fit: cover; }
+#avplayHolder object { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+
+/* Status */
+#status { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);
+  background: rgba(0,0,0,.75); padding: 28px 44px; border-radius: 14px; font-size: 32px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+#status.error { border: 2px solid #e53935; }
+#status.error .spinner { display: none; }
+.spinner { width: 40px; height: 40px; border: 5px solid rgba(255,255,255,.25); border-top-color: #f5b400; border-radius: 50%; margin-right: 22px;
+  -webkit-animation: spin 0.9s linear infinite; animation: spin 0.9s linear infinite; }
+@-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#clock { position: absolute; right: 50px; top: 36px; font-size: 36px; font-weight: 500; text-shadow: 0 2px 6px #000; }
+
+#numEntry { position: absolute; right: 50px; top: 100px; background: rgba(0,0,0,.8); border: 3px solid #f5b400; border-radius: 14px;
+  font-size: 84px; font-weight: 700; padding: 6px 34px; min-width: 120px; text-align: center; color: #f5b400; }
+#numEntry small { display: block; font-size: 26px; color: #fff; font-weight: 400; max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Info bar */
+#infoBar { position: absolute; left: 60px; right: 60px; bottom: 50px; height: 210px; border-radius: 18px;
+  background: -webkit-linear-gradient(top, rgba(22,22,26,.94), rgba(8,8,10,.96)); background: linear-gradient(180deg, rgba(22,22,26,.94), rgba(8,8,10,.96));
+  border-top: 3px solid #f5b400; display: -webkit-flex; display: flex; padding: 22px 30px; box-sizing: border-box; }
+.ib-left { min-width: 230px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+.ib-num { font-size: 60px; font-weight: 700; color: #f5b400; min-width: 110px; padding-right: 24px; text-align: center; }
+.ib-logo { width: 110px; height: 110px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
+.ib-logo img { max-width: 110px; max-height: 100px; }
+.ib-logo .ltr { font-size: 56px; font-weight: 700; color: #f5b400; }
+.ib-logo { background: rgba(255,255,255,.07); border-radius: 14px; }
+.ib-main { -webkit-flex: 1; flex: 1; padding: 0 30px; overflow: hidden; }
+.ib-title { font-size: 44px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-fav { color: #f5b400; margin-left: 16px; }
+.ib-now, .ib-next { font-size: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 8px; }
+.ib-next { color: #9a9aa2; }
+.ib-time { color: #f5b400; margin-right: 18px; font-weight: 500; }
+.ib-next .ib-time { color: #8a7a40; }
+.progress { height: 8px; background: rgba(255,255,255,.15); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.progress div { height: 100%; width: 0; background: #f5b400; }
+.ib-right { width: 220px; text-align: right; }
+.ib-clock { font-size: 52px; font-weight: 500; }
+.ib-group { font-size: 26px; color: #9a9aa2; margin-top: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Panel */
+#panel { position: absolute; left: 0; top: 0; bottom: 0; width: 1920px; display: -webkit-flex; display: flex;
+  background: -webkit-linear-gradient(left, rgba(6,6,8,.96) 0%, rgba(6,6,8,.92) 75%, rgba(6,6,8,0) 92%);
+  background: linear-gradient(90deg, rgba(6,6,8,.96) 0%, rgba(6,6,8,.92) 75%, rgba(6,6,8,0) 92%); }
+.col { position: relative; height: 1080px; box-sizing: border-box; padding-top: 30px; }
+.col-groups { width: 340px; border-right: 1px solid rgba(255,255,255,.08); }
+.col-channels { width: 700px; border-right: 1px solid rgba(255,255,255,.08); }
+.col-epg { width: 560px; }
+.brand { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; padding: 0 24px; height: 80px; font-size: 30px; font-weight: 300; white-space: nowrap; }
+.brand img { width: 46px; height: 46px; margin-right: 12px; }
+.brand b, .set-brand b { color: #f5b400; font-weight: 700; }
+.col-head { height: 70px; padding: 0 24px; font-size: 28px; font-weight: 500; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f5b400; }
+.col-head .count { margin-left: auto; color: #77777f; font-size: 26px; font-weight: 400; }
+.list { position: absolute; left: 0; right: 0; top: 110px; bottom: 80px; overflow: hidden; }
+
+.row { position: relative; height: 64px; box-sizing: border-box; padding: 0 24px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+  font-size: 26px; white-space: nowrap; overflow: hidden; border-left: 6px solid transparent; }
+.row .txt { -webkit-flex: 1; flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.row .cnt { color: #77777f; font-size: 24px; margin-left: 12px; }
+.row.sel { background: rgba(245,180,0,.14); border-left-color: #f5b400; }
+.col.active .row.sel { background: #f5b400; color: #000; border-left-color: #fff; }
+.col.active .row.sel .cnt, .col.active .row.sel .ch-epg, .col.active .row.sel .ch-num { color: #000; }
+.col.active .row.sel .ch-prog { background: rgba(0,0,0,.25); }
+.col.active .row.sel .ch-prog div { background: #000; }
+.row.playing .ch-name { color: #f5b400; }
+.col.active .row.sel.playing .ch-name { color: #000; }
+
+.ch-row { height: 78px; padding: 0 18px; }
+.ch-num { width: 62px; color: #77777f; font-size: 22px; text-align: right; margin-right: 14px; }
+.ch-logo { width: 80px; height: 56px; margin-right: 14px; display: -webkit-flex; display: flex; -webkit-align-items: center; -webkit-justify-content: center; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.06); border-radius: 8px; overflow: hidden; }
+.ch-logo img { max-width: 76px; max-height: 52px; }
+.ch-logo .ltr { font-size: 26px; font-weight: 700; color: #f5b400; }
+.col.active .row.sel .ch-logo { background: rgba(0,0,0,.12); }
+.ch-body { -webkit-flex: 1; flex: 1; overflow: hidden; }
+.ch-name { font-size: 26px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+.ch-epg { font-size: 19px; color: #9a9aa2; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+.ch-prog { height: 4px; background: rgba(255,255,255,.12); margin-top: 6px; border-radius: 2px; overflow: hidden; }
+.ch-prog div { height: 100%; background: #f5b400; }
+.ch-star { color: #f5b400; font-size: 30px; margin-left: 10px; }
+
+.epg-row { height: 58px; padding: 0 24px; font-size: 23px; }
+.epg-row .t { width: 84px; color: #f5b400; }
+.epg-row.past { color: #66666e; }
+.epg-row.past .t { color: #66666e; }
+.epg-row.now { background: rgba(245,180,0,.12); font-weight: 500; }
+.epg-empty { padding: 24px; font-size: 24px; color: #77777f; white-space: normal; }
+
+.hints { position: absolute; left: 0; bottom: 0; height: 70px; width: 1600px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+  padding-left: 30px; font-size: 24px; color: #aaa; border-top: 1px solid rgba(255,255,255,.08); box-sizing: border-box; }
+.hints span { margin-right: 28px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+.k { display: inline-block; width: 26px; height: 16px; border-radius: 4px; margin-right: 10px; }
+.k.red { background: #e53935; } .k.green { background: #43a047; } .k.yellow { background: #fdd835; } .k.blue { background: #1e88e5; }
+
+/* Search */
+#search { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: rgba(0,0,0,.6); }
+.search-box { position: absolute; left: 460px; top: 200px; width: 1000px; background: #141418; border-radius: 18px; padding: 40px; box-sizing: border-box; border-top: 4px solid #f5b400; }
+.search-title { font-size: 34px; margin-bottom: 24px; }
+input[type=text], input[type=url] { width: 100%; box-sizing: border-box; font-size: 32px; padding: 18px 22px; border-radius: 10px; border: 3px solid #333; background: #000; color: #fff; outline: none; }
+input:focus { border-color: #f5b400; }
+
+/* Settings */
+#settings { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+  background: -webkit-radial-gradient(30% 20%, circle, #26221a 0%, #0a0a0c 60%); background: radial-gradient(circle at 30% 20%, #26221a 0%, #0a0a0c 60%); }
+.set-box { position: absolute; left: 330px; top: 36px; width: 1260px; }
+.set-brand { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; font-size: 50px; font-weight: 300; }
+.set-brand img { width: 76px; height: 76px; margin-right: 20px; }
+.set-sub { font-size: 28px; color: #9a9aa2; margin: 8px 0 22px; }
+.set-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; min-height: 72px; padding: 4px 30px; box-sizing: border-box;
+  background: rgba(255,255,255,.05); border-radius: 12px; margin-bottom: 8px; border: 3px solid transparent; font-size: 28px; }
+.set-item .lbl { width: 420px; color: #ccc; }
+.set-item .val { -webkit-flex: 1; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.set-item .val input { font-size: 27px; padding: 8px 18px; }
+.set-item.sel { border-color: #f5b400; background: rgba(245,180,0,.10); }
+.set-item.btn { -webkit-justify-content: center; justify-content: center; background: #f5b400; color: #000; font-weight: 700; min-height: 84px; font-size: 32px; margin: 4px 0 14px; }
+.set-item.btn.sel { border-color: #fff; background: #ffd451; }
+.set-item .arr { color: #f5b400; margin: 0 14px; }
+.set-items { position: relative; max-height: 790px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.set-items::-webkit-scrollbar { width: 8px; } .set-items::-webkit-scrollbar-thumb { background: #f5b400; border-radius: 4px; }
+.set-foot { font-size: 22px; color: #77777f; margin-top: 14px; line-height: 1.5; }
+
+/* Dialog */
+#dialog { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: rgba(0,0,0,.6); }
+.dlg-box { position: absolute; left: 610px; top: 380px; width: 700px; background: #141418; border-radius: 18px; padding: 44px; box-sizing: border-box; text-align: center; border-top: 4px solid #f5b400; }
+.dlg-text { font-size: 36px; margin-bottom: 36px; white-space: pre-line; }
+.dlg-btns { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; }
+.dlg-btn { font-size: 30px; padding: 16px 50px; margin: 0 14px; border-radius: 10px; background: #2a2a30; border: 3px solid transparent; }
+.dlg-btn.sel { background: #f5b400; color: #000; border-color: #fff; font-weight: 700; }
+
+#toast { position: absolute; left: 50%; top: 60px; -webkit-transform: translateX(-50%); transform: translateX(-50%); background: rgba(0,0,0,.85);
+  padding: 18px 40px; border-radius: 40px; font-size: 30px; border: 2px solid #f5b400; white-space: nowrap; }
+
+/* Internet holati belgisi */
+#netBadge { position: absolute; left: 50px; top: 40px; background: rgba(0,0,0,.75); border-left: 5px solid #f5b400; border-radius: 10px;
+  padding: 14px 26px; font-size: 26px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+.spinner.small { width: 26px; height: 26px; border-width: 4px; margin-right: 16px; }
+
+.hints span, .row, .set-item, .dlg-btn, .arr { cursor: pointer; }
+.arr { padding: 0 6px; }
+
+body.solid { background: #000 !important; }
+
+/* Ovoz ko'rsatkichi */
+#volBadge { position: absolute; left: 50%; top: 80px; -webkit-transform: translateX(-50%); transform: translateX(-50%); background: rgba(0,0,0,.8);
+  border-radius: 40px; padding: 18px 34px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; font-size: 34px; }
+.vol-ico { margin-right: 20px; }
+.vol-track { width: 500px; height: 12px; background: rgba(255,255,255,.2); border-radius: 6px; overflow: hidden; margin-right: 22px; }
+#volBar { height: 100%; width: 0; background: #f5b400; }
+#volVal { min-width: 60px; text-align: right; font-weight: 700; color: #f5b400; }
+
+/* Kanal menyusi */
+#ctx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: rgba(0,0,0,.35); }
+.ctx-box { position: absolute; left: 860px; top: 300px; width: 640px; background: #141418; border-radius: 18px; padding: 26px 0; border-left: 5px solid #f5b400; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+.ctx-title { font-size: 30px; color: #f5b400; padding: 0 34px 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctx-item { font-size: 32px; padding: 20px 34px; cursor: pointer; }
+.ctx-item.sel { background: #f5b400; color: #000; font-weight: 700; }
+.kk { display: inline-block; min-width: 26px; padding: 0 6px; height: 26px; line-height: 26px; border-radius: 5px; background: #3a3a42; color: #fff; font-size: 18px; text-align: center; margin-right: 10px; }
+
+/* Qurilma ID */
+.dev-id { font-size: 20px; color: #f5b400; font-weight: 500; letter-spacing: 1px; margin-top: 2px; }
+.ib-id { font-size: 22px; color: #77777f; margin-top: 8px; }
+.set-sub { display: -webkit-flex; display: flex; }
+.set-id { margin-left: auto; color: #fff; font-size: 30px; }
+.set-id b { color: #f5b400; letter-spacing: 2px; }
+
+/* Arxiv */
+.epg-row .rec { color: #f5b400; font-size: 18px; margin-left: 10px; }
+.col.active .epg-row.sel { background: #f5b400; color: #000; border-left-color: #fff; }
+.col.active .epg-row.sel .t, .col.active .epg-row.sel .rec { color: #000; }
+
+/* Muddat */
+.dev-until { font-size: 18px; color: #9a9aa2; margin-top: 1px; }
+.dev-until.warn { color: #ff7043; font-weight: 700; }
+#payWarn { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: rgba(0,0,0,.7); }
+.pw-box { position: absolute; left: 360px; top: 200px; width: 1200px; background: #141418; border-radius: 22px; padding: 44px 54px; box-sizing: border-box; border-top: 6px solid #f5b400; }
+.pw-box.expired { border-top-color: #e53935; }
+.pw-title { font-size: 46px; font-weight: 700; color: #f5b400; margin-bottom: 26px; }
+.pw-box.expired .pw-title { color: #ff5a4f; }
+.pw-body { display: -webkit-flex; display: flex; }
+.pw-text { -webkit-flex: 1; flex: 1; font-size: 32px; line-height: 1.45; padding-right: 30px; }
+.pw-line { margin-top: 18px; color: #ccc; }
+.pw-line b { color: #f5b400; letter-spacing: 1px; }
+.pw-bot { font-size: 44px; font-weight: 700; color: #fff; }
+.pw-hint { font-size: 24px; color: #77777f; margin-top: 22px; }
+.pw-qr { width: 320px; height: 320px; background: #fff; border-radius: 14px; padding: 16px; box-sizing: border-box; }
+.pw-qr img, .pw-qr svg { width: 100%; height: 100%; display: block; }
+.pw-btn { margin: 34px auto 0; width: 380px; text-align: center; font-size: 32px; font-weight: 700; padding: 20px; border-radius: 12px; background: #f5b400; color: #000; border: 3px solid #fff; cursor: pointer; }
+
+/* Tekshirish */
+#diag { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: rgba(0,0,0,.75); }
+.dg-box { position: absolute; left: 330px; top: 110px; width: 1260px; background: #141418; border-radius: 22px; padding: 40px 54px; box-sizing: border-box; border-top: 6px solid #f5b400; }
+.dg-title { font-size: 44px; font-weight: 700; color: #f5b400; margin-bottom: 24px; }
+.dg-row { display: -webkit-flex; display: flex; font-size: 32px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+.dg-row .ic { width: 60px; }
+.dg-row .nm { width: 420px; color: #ccc; }
+.dg-row .vl { -webkit-flex: 1; flex: 1; font-weight: 500; }
+.dg-verdict { font-size: 32px; margin-top: 26px; line-height: 1.4; }
+.dg-help { font-size: 26px; color: #9a9aa2; margin-top: 16px; line-height: 1.5; }
+.ok { color: #66bb6a; } .bad { color: #ff5a4f; } .warn { color: #ffb300; }
+
+#speedBadge { position: absolute; right: 40px; bottom: 30px; background: rgba(0,0,0,.65); border-radius: 30px; padding: 10px 24px; font-size: 24px; color: #ccc; }
+#speedBadge.low { color: #ff7043; border: 2px solid #ff7043; }
+.ver { opacity: .7; font-weight: normal; margin-left: 6px; }
+#panel.see .row, #panel.see .col-head, #panel.see .brand, #panel.see .hints { text-shadow: 0 0 4px #000, 0 0 8px #000, 1px 1px 2px #000; }
+/* Windows: oynali rejimda sudrash uchun tasma */
+#dragBar { display: none; position: fixed; left: 0; top: 0; right: 0; height: 26px; z-index: 9999; -webkit-app-region: drag; app-region: drag;
+  background: rgba(10,10,12,.75); color: #aaa; font: 13px/26px "Segoe UI", Arial, sans-serif; text-align: center; }
+body.deskwin #dragBar { display: block; }
+/* Windows: sichqoncha qimirlaganda chiqadigan tugmalar */
+#deskBar { position: fixed; top: 34px; right: 14px; z-index: 9998; display: -webkit-flex; display: flex; gap: 6px; opacity: 0; pointer-events: none; transition: opacity .25s; }
+#deskBar.on { opacity: 1; pointer-events: auto; }
+#deskBar .db { background: rgba(10,10,12,.82); color: #fff; font: 15px/34px "Segoe UI", Arial, sans-serif; min-width: 34px; padding: 0 10px; text-align: center;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,.15); cursor: pointer; }
+#deskBar .db:hover { background: #f5b400; color: #000; }
+#deskBar .db.x:hover { background: #e53935; color: #fff; }
+#dialog.wide .dlg-box { left: 360px; top: 150px; width: 1200px; text-align: left; }
+#dialog.wide .dlg-text { font-size: 32px; line-height: 1.6; }
+#dialog.wide .dlg-btns { text-align: center; }
+body.ios, html { background: #000; }
+#rotate { display: none; }
+@media (orientation: portrait) {
+  #rotate { display: flex; position: fixed; inset: 0; z-index: 99; background: #000; color: #ddd; font: 20px -apple-system, sans-serif;
+    flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  #rotate div { font-size: 64px; color: #f5b400; }
+}
+</style>
+</head>
+<body>
+<div id="dragBar">Black Star TV &nbsp;•&nbsp; shu yerdan ushlab suring &nbsp;•&nbsp; F11 — o'lcham</div>
+  <div id="rotate"><div>&#x21BB;</div>Telefonni yotqizing</div>
+  <div id="stage">
+
+  <!-- Video qatlami (brauzer rejimi uchun) -->
+  <video id="video" playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></video>
+  <!-- Tizen AVPlay obyekti (faqat Tizenda ishlatiladi) -->
+  <div id="avplayHolder"></div>
+
+  <!-- Yuklanish / xato -->
+  <div id="status" class="hidden"><div class="spinner"></div><span id="statusText"></span></div>
+
+  <!-- Internet holati (burchakda, video to'xtamaydi) -->
+  <div id="netBadge" class="hidden"><div class="spinner small"></div><span id="netBadgeText"></span></div>
+
+  <!-- Ovoz darajasi -->
+  <div id="volBadge" class="hidden"><span class="vol-ico">&#128266;</span><div class="vol-track"><div id="volBar"></div></div><span id="volVal"></span></div>
+
+  <!-- Doimiy tezlik ko'rsatkichi -->
+  <div id="speedBadge" class="hidden"></div>
+
+  <!-- Soat -->
+  <div id="clock"></div>
+
+  <!-- Raqam kiritish -->
+  <div id="numEntry" class="hidden"></div>
+
+  <!-- Pastki info-panel -->
+  <div id="infoBar" class="hidden">
+    <div class="ib-left">
+      <div class="ib-num" id="ibNum"></div>
+      <div class="ib-logo" id="ibLogo"></div>
+    </div>
+    <div class="ib-main">
+      <div class="ib-title"><span id="ibName"></span><span class="ib-fav hidden" id="ibFav">&#9733;</span></div>
+      <div class="ib-now"><span class="ib-time" id="ibNowTime"></span><span id="ibNowTitle"></span></div>
+      <div class="progress"><div id="ibProgress"></div></div>
+      <div class="ib-next"><span class="ib-time" id="ibNextTime"></span><span id="ibNextTitle"></span></div>
+    </div>
+    <div class="ib-right">
+      <div class="ib-clock" id="ibClock"></div>
+      <div class="ib-group" id="ibGroup"></div>
+      <div class="ib-id">ID: <span id="devIdInfo"></span></div>
+    </div>
+  </div>
+
+  <!-- Kanallar paneli -->
+  <div id="panel" class="hidden">
+    <div class="col col-groups">
+      <div class="brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmQ0NTEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlMDlhMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KICA8cmVjdCB4PSI0IiB5PSI0IiB3aWR0aD0iOTIiIGhlaWdodD0iOTIiIHJ4PSIyMiIgZmlsbD0iIzExMSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjUiLz4KICA8cGF0aCBkPSJNNTAgMTcgTDU5LjQgMzkuMSBMODMuMyA0MS4yIEw2NS4yIDU3IEw3MC42IDgwLjQgTDUwIDY4IEwyOS40IDgwLjQgTDM0LjggNTcgTDE2LjcgNDEuMiBMNDAuNiAzOS4xIFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==" alt=""><div><div>Black Star <b>TV</b></div><div class="dev-id">ID: <span id="devIdPanel"></span> <span class="ver" id="verPanel"></span></div><div class="dev-until" id="devUntil"></div></div></div>
+      <div class="list" id="groupList"></div>
+    </div>
+    <div class="col col-channels">
+      <div class="col-head"><span id="chHead"></span><span class="count" id="chCount"></span></div>
+      <div class="list" id="chList"></div>
+    </div>
+    <div class="col col-epg">
+      <div class="col-head" id="epgHead"></div>
+      <div class="list" id="epgList"></div>
+    </div>
+    <div class="hints">
+      <span><b class="kk">OK</b>Ko'rish</span>
+      <span><b class="kk">&#9654;</b>Menyu</span>
+      <span data-k="red"><i class="k red"></i>Sevimli</span>
+      <span data-k="green"><i class="k green"></i>Ekran</span>
+      <span data-k="yellow"><i class="k yellow"></i>Qidiruv</span>
+      <span data-k="blue"><i class="k blue"></i>Sozlamalar</span>
+    </div>
+  </div>
+
+  <!-- Kanal menyusi -->
+  <div id="ctx" class="hidden">
+    <div class="ctx-box">
+      <div class="ctx-title" id="ctxTitle"></div>
+      <div id="ctxList"></div>
+    </div>
+  </div>
+
+  <!-- Qidiruv -->
+  <div id="search" class="hidden">
+    <div class="search-box">
+      <div class="search-title">Kanal qidirish</div>
+      <input id="searchInput" type="text" placeholder="Kanal nomini yozing...">
+    </div>
+  </div>
+
+  <!-- Sozlamalar / birinchi ishga tushirish -->
+  <div id="settings" class="hidden">
+    <div class="set-box">
+      <div class="set-brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmQ0NTEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlMDlhMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KICA8cmVjdCB4PSI0IiB5PSI0IiB3aWR0aD0iOTIiIGhlaWdodD0iOTIiIHJ4PSIyMiIgZmlsbD0iIzExMSIgc3Ryb2tlPSJ1cmwoI2cpIiBzdHJva2Utd2lkdGg9IjUiLz4KICA8cGF0aCBkPSJNNTAgMTcgTDU5LjQgMzkuMSBMODMuMyA0MS4yIEw2NS4yIDU3IEw3MC42IDgwLjQgTDUwIDY4IEwyOS40IDgwLjQgTDM0LjggNTcgTDE2LjcgNDEuMiBMNDAuNiAzOS4xIFoiIGZpbGw9InVybCgjZykiLz4KPC9zdmc+Cg==" alt=""><span>Black Star <b>TV</b></span></div>
+      <div class="set-sub"><span id="setSub">Sozlamalar</span><span class="set-id">ID: <b id="devIdSet"></b> <span class="ver" id="verSet"></span></span></div>
+      <div class="set-items" id="setItems"></div>
+      <div class="set-foot" id="setFoot"></div>
+    </div>
+  </div>
+
+  <!-- Tasdiqlash oynasi -->
+  <div id="dialog" class="hidden">
+    <div class="dlg-box">
+      <div class="dlg-text" id="dlgText"></div>
+      <div class="dlg-btns" id="dlgBtns"></div>
+    </div>
+  </div>
+
+  <!-- To'lov / muddat ogohlantirishi -->
+  <div id="payWarn" class="hidden">
+    <div class="pw-box">
+      <div class="pw-title" id="pwTitle"></div>
+      <div class="pw-body">
+        <div class="pw-text">
+          <div id="pwText"></div>
+          <div class="pw-line" id="pwBotLine">Uzaytirish uchun botga yozing:</div>
+          <div class="pw-bot" id="pwBot"></div>
+          <div class="pw-line" id="pwPhoneLine">yoki qo'ng'iroq qiling: <b id="pwPhone"></b></div>
+          <div class="pw-line">Sizning ID: <b id="pwId"></b></div>
+          <div class="pw-hint" id="pwQrHint">Telefon kamerasi bilan QR-kodni skanerlang — bot ID'ingiz bilan ochiladi</div>
+        </div>
+        <div class="pw-qr" id="pwQr"></div>
+      </div>
+      <div class="pw-btn" data-k="ok">Tushunarli</div>
+    </div>
+  </div>
+
+  <!-- Yordam / Tekshirish -->
+  <div id="diag" class="hidden">
+    <div class="dg-box">
+      <div class="dg-title" id="dgTitle">🩺 Tekshirish</div>
+      <div id="dgList"></div>
+      <div class="dg-verdict" id="dgVerdict"></div>
+      <div class="dg-help" id="dgHelp"></div>
+      <div class="pw-btn" data-k="ok">Yopish</div>
+    </div>
+  </div>
+
+  <!-- Qisqa xabar -->
+  <div id="toast" class="hidden"></div>
+</div>
+
+
+<script>window.BST_IOS = true;
+var BST_CONFIG = {
+  accountSheetUrl: '',
+  bot: '@Blackstartvuzbot',
+  phone: '+998 99 741 78 86',
+  tokenUrl: 'https://1lot.tv/pl/{token}/10/only4tv.m3u8',
+  warnDays: 3,
+  updateUrl: ''
+};
+</script>
+<script>/* Black Star TV — yordamchi funksiyalar (ES5, eski TV brauzerlari uchun) */
+var U = (function () {
+  'use strict';
+
+  var platform = 'browser';
+  if (window.tizen || /Tizen/i.test(navigator.userAgent)) platform = 'tizen';
+  else if (window.BSTNative) platform = 'android';
+  else if (/Web0S|webOS|NetCast/i.test(navigator.userAgent) || window.PalmSystem) platform = 'webos';
+  else if (window.BST_IOS || /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) platform = 'ios';
+  // iPhone: VLC faqat foydalanuvchi bosganda ochiladi (ilovaga qaytganda qayta ochilmasin)
+  var lastTap = 0;
+  if (platform === 'ios') ['touchend', 'click', 'keydown'].forEach(function (ev) { document.addEventListener(ev, function () { lastTap = Date.now(); }, true); });
+
+  function $(id) { return document.getElementById(id); }
+
+  function store(key, val) {
+    try {
+      if (arguments.length === 1) {
+        var v = localStorage.getItem('bst.' + key);
+        return v === null ? null : JSON.parse(v);
+      }
+      localStorage.setItem('bst.' + key, JSON.stringify(val));
+    } catch (e) { return null; }
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function hhmm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function isGzip(bytes) { return bytes.length > 2 && bytes[0] === 0x1f && bytes[1] === 0x8b; }
+
+  function utf8(bytes) {
+    if (window.TextDecoder) return new TextDecoder('utf-8').decode(bytes);
+    // Eski brauzerlar uchun
+    var out = '', i = 0, CH = 8192;
+    for (; i < bytes.length; i += CH) out += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+    try { return decodeURIComponent(escape(out)); } catch (e) { return out; }
+  }
+
+  // URL dan matn yuklash (.gz bo'lsa avtomatik ochadi)
+  function fetchText(url, cb, timeoutMs, maxBytes) {
+    var xhr = new XMLHttpRequest();
+    var done = false;
+    function finish(err, txt) { if (done) return; done = true; cb(err, txt); }
+    try { xhr.open('GET', url, true); } catch (e) { finish('URL noto\'g\'ri'); return; }
+    xhr.responseType = 'arraybuffer';
+    xhr.timeout = timeoutMs || 30000;
+    xhr.onload = function () {
+      if (xhr.status && (xhr.status < 200 || xhr.status >= 300)) { finish('Server javobi: ' + xhr.status); return; }
+      try {
+        var bytes = new Uint8Array(xhr.response || new ArrayBuffer(0));
+        if (isGzip(bytes)) {
+          if (!window.pako) { finish('gzip ochilmadi'); return; }
+          bytes = window.pako.inflate(bytes);
+        }
+        finish(null, utf8(bytes));
+      } catch (e) { finish('O\'qishda xato: ' + e.message); }
+    };
+    xhr.onerror = function () { finish('Internetga ulanib bo\'lmadi'); };
+    xhr.ontimeout = function () { finish('Vaqt tugadi (server javob bermadi)'); };
+    // Juda katta fayl (masalan 300 MB lik EPG) televizor xotirasini to'ldirmasin
+    if (maxBytes) xhr.onprogress = function (e) { if (e.loaded > maxBytes) { try { xhr.abort(); } catch (x) {} finish('juda katta'); } };
+    xhr.send();
+  }
+
+  // 1920x1080 sahnani ekranga moslash.
+  // Ba'zi TV/telefon WebView'lari ekran o'lchamini noto'g'ri beradi — shuning uchun
+  // natijani o'lchab, sig'masa qayta to'g'rilaymiz.
+  var uiScale = 1;
+  function viewSize() {
+    var de = document.documentElement;
+    var w = Math.min(window.innerWidth || 99999, de.clientWidth || 99999);
+    var h = Math.min(window.innerHeight || 99999, de.clientHeight || 99999);
+    if (w === 99999 || !w) w = 1920; if (h === 99999 || !h) h = 1080;
+    return { w: w, h: h };
+  }
+  function apply(s, k, x, y) {
+    var t = 'translate(' + x + 'px,' + y + 'px) scale(' + k + ')';
+    s.style.webkitTransform = t; s.style.transform = t;
+  }
+  function fitStage() {
+    var s = $('stage'), v = viewSize();
+    var k = Math.min(v.w / 1920, v.h / 1080) * uiScale;
+    apply(s, k, Math.round((v.w - 1920 * k) / 2), Math.round((v.h - 1080 * k) / 2));
+    // Tekshirish: haqiqatda sig'dimi?
+    var r = s.getBoundingClientRect();
+    if (r.width > 0 && (r.width > v.w + 2 || r.height > v.h + 2)) {
+      var f = Math.min(v.w / r.width, v.h / r.height);
+      k = k * f;
+      apply(s, k, Math.round((v.w - 1920 * k) / 2), Math.round((v.h - 1080 * k) / 2));
+    }
+  }
+  function setUiScale(p) { uiScale = (p || 100) / 100; fitStage(); }
+  function watchFit() {
+    fitStage();
+    window.addEventListener('resize', fitStage);
+    window.addEventListener('orientationchange', function () { setTimeout(fitStage, 300); });
+    setTimeout(fitStage, 200); setTimeout(fitStage, 1000); setTimeout(fitStage, 3000);
+  }
+
+  // Qurilmaning doimiy 8 xonali ID raqami (mijoz hisobini to'ldirish uchun)
+  function deviceId() {
+    var id = store('deviceId');
+    if (id) return id;
+    try {
+      if (platform === 'android' && window.BSTNative.deviceId) id = window.BSTNative.deviceId();
+      else if (platform === 'tizen' && window.webapis && webapis.productinfo) id = num8(webapis.productinfo.getDuid());
+    } catch (e) {}
+    if (!id) id = String(10000000 + Math.floor(Math.random() * 90000000));
+    store('deviceId', id);
+    return id;
+  }
+  function num8(str) {
+    var h = 0, i; str = 'bst:' + str;
+    for (i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    return String(10000000 + (h % 90000000));
+  }
+  function fmtId(id) { return String(id).replace(/(\d{4})(\d{4})/, '$1 $2'); }
+
+  function hash(str) {
+    var h = 0, i;
+    for (i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
+    return (h >>> 0).toString(36);
+  }
+
+  return { lastTap: function () { return lastTap; }, platform: platform, $: $, store: store, pad: pad, hhmm: hhmm, esc: esc, fetchText: fetchText, fitStage: fitStage, watchFit: watchFit, deviceId: deviceId, fmtId: fmtId, setUiScale: setUiScale, hash: hash };
+})();
+</script>
 <script>
-'use strict';
-var TPL='https://1lot.tv/pl/{token}/10/only4tv.m3u8', VLC_STORE='https://apps.apple.com/app/vlc-media-player/id650377962';
-var $=function(i){return document.getElementById(i)}, st=function(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem('bsi.'+k));localStorage.setItem('bsi.'+k,JSON.stringify(v))}catch(e){}};
-var chans=[], groups=[], cur=st('grp')||'Hammasi', favs=st('favs')||{}, q='';
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function toast(m,ms){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display='none'},ms||2500)}
-function attrs(s){var re=/([\w-]+)\s*=\s*"([^"]*)"/g,m,o={};while((m=re.exec(s)))o[m[1].toLowerCase()]=m[2];return o}
-function parse(t){var L=t.replace(/\r/g,'').split('\n'),out=[],c=null,i,l,a,k;
- for(i=0;i<L.length;i++){l=L[i].trim();if(!l)continue;
-  if(/^#EXTINF/i.test(l)){a=attrs(l);k=l.lastIndexOf('",');k=k>=0?k+1:l.indexOf(',');
-   c={name:(k>=0?l.substring(k+1).trim():'')||a['tvg-name']||'Kanal',logo:(a['tvg-logo']||'').replace(/^http:\/\/1lot\.tv/,'https://1lot.tv'),group:a['group-title']||'Boshqa',days:parseFloat(a['catchup-days']||'0')||0};continue}
-  if(/^#EXTGRP:/i.test(l)){if(c&&c.group==='Boshqa')c.group=l.substring(8).trim();continue}
-  if(l.charAt(0)==='#')continue;
-  if(c){c.url=l;c.id=c.name+'|'+l.split('?')[0];out.push(c);c=null}}
- return out}
-function token(){return st('token')||''}
-function start(){var u=new URLSearchParams(location.search).get('t');if(u){st('token',u.trim());history.replaceState(null,'',location.pathname)}
- if(!token())return login();load()}
-function login(err){$('app').innerHTML='<div class="box"><img src="icon.png" width="64" style="border-radius:14px"><h2>Black Star TV</h2>'+
- '<p>Tokeningizni kiriting. Kanallar iPhone\'dagi <b>VLC</b> pleyerida ochiladi.</p>'+(err?'<p style="color:#ff6b6b">'+esc(err)+'</p>':'')+
- '<input id="tk" placeholder="Token, masalan: fJr1biXQcd" autocapitalize="off" autocorrect="off" spellcheck="false" value="'+esc(token())+'">'+
- '<button class="btn" onclick="saveTok()">Kirish</button>'+
- '<a class="btn gr" href="'+VLC_STORE+'">1-qadam: VLC ni o\'rnatish (bepul)</a>'+
- '<p style="font-size:13px">Maslahat: Safari\'da «Ulashish» → «Ekran boshiga qo\'shish» ni bosing — ilovadek ochiladi.</p></div>'}
-function saveTok(){var v=$('tk').value.replace(/\s+/g,'');if(!/^[A-Za-z0-9]{6,24}$/.test(v)){toast('Token faqat harf va raqamlardan iborat');return}st('token',v);load()}
-function load(){$('app').innerHTML='<div class="box"><p>Kanallar yuklanmoqda...</p></div>';
- var cache=st('cache');
- fetch(TPL.replace('{token}',encodeURIComponent(token())),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Server javobi: '+r.status);return r.text()}).then(function(t){
-  var c=parse(t);if(!c.length){login('Bu token bo\'yicha kanal topilmadi: token noto\'g\'ri yoki obuna tugagan.');return}
-  try{localStorage.setItem('bsi.cache',JSON.stringify({tk:token(),c:c}))}catch(e){}show(c)
- }).catch(function(e){if(cache&&cache.tk===token()){show(cache.c);toast('Internet yo\'q — saqlangan ro\'yxat')}else login('Yuklanmadi: '+e.message)})}
-function show(c){chans=c;groups=['⭐ Sevimlilar','Hammasi'];c.forEach(function(x){if(groups.indexOf(x.group)<0)groups.push(x.group)});
- if(groups.indexOf(cur)<0)cur='Hammasi';
- $('app').innerHTML='<header><div class="top"><img src="icon.png"><b>Black Star <span>TV</span></b><button class="ib" onclick="load()">⟳</button><button class="ib" onclick="settings()">⚙</button></div>'+
- '<input id="q" type="search" placeholder="Kanal qidirish ('+c.length+' ta)" oninput="q=this.value.toLowerCase();render()"><div id="grp"></div></header><div id="list"></div>';
- render()}
-function render(){$('grp').innerHTML=groups.map(function(g){return'<div class="g'+(g===cur?' on':'')+'" onclick="setG(this)" data-g="'+esc(g)+'">'+esc(g)+'</div>'}).join('');
- var l=chans.filter(function(x){if(q)return x.name.toLowerCase().indexOf(q)>=0;if(cur==='Hammasi')return true;if(cur==='⭐ Sevimlilar')return favs[x.id];return x.group===cur});
- var h=l.slice(0,400).map(function(x){var i=chans.indexOf(x);return'<div class="ch" onclick="play('+i+')"><div class="lg"'+(x.logo?' style="background-image:url(\''+esc(x.logo)+'\')"':'')+'></div>'+
-  '<div class="nm"><div>'+esc(x.name)+'</div><small>'+esc(x.group)+'</small></div>'+(x.days?'<button class="ar" onclick="event.stopPropagation();arch('+i+')">⏪ Arxiv</button>':'')+
-  '<button class="st'+(favs[x.id]?' on':'')+'" onclick="event.stopPropagation();fav('+i+',this)">★</button></div>'}).join('');
- if(!l.length)h='<div class="hint">'+(cur==='⭐ Sevimlilar'&&!q?'Sevimli kanal yo\'q. Kanal yonidagi ★ ni bosing.':'Hech narsa topilmadi')+'</div>';
- if(l.length>400)h+='<div class="hint">Yana '+(l.length-400)+' ta — qidiruvdan foydalaning</div>';
- $('list').innerHTML=h}
-function setG(el){cur=el.getAttribute('data-g');st('grp',cur);q='';$('q').value='';render();window.scrollTo(0,0)}
-function fav(i,el){var x=chans[i];if(favs[x.id])delete favs[x.id];else favs[x.id]=1;st('favs',favs);el.classList.toggle('on')}
-function openVlc(url,title){st('last',title);var t=Date.now();
- location.href='vlc-x-callback://x-callback-url/stream?url='+encodeURIComponent(url);
- setTimeout(function(){if(!document.hidden&&Date.now()-t<2600){$('sheetIn').innerHTML='<h3>VLC ochilmadi</h3><p style="color:#aaa">iPhone\'da VLC pleyeri o\'rnatilmagan bo\'lishi mumkin. O\'rnating va kanalni qayta bosing.</p><a class="btn" href="'+VLC_STORE+'">VLC ni o\'rnatish (bepul)</a><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}},2000)}
-function play(i){openVlc(chans[i].url,chans[i].name)}
-function pad(n){return(n<10?'0':'')+n}
-function arch(i){var x=chans[i],now=new Date(),h='<h3>⏪ '+esc(x.name)+'</h3><p style="color:#aaa;margin:0 0 4px;font-size:14px">Qaysi vaqtdan boshlab ko\'rasiz?</p>',days=Math.min(x.days,7),d,s,last='';
- for(var k=1;k<=days*24;k++){d=new Date(now.getTime()-k*3600000);d.setMinutes(0,0,0);s=d.toDateString();
-  if(s!==last){h+=(last?'</div>':'')+'<div class="day">'+(s===now.toDateString()?'Bugun':(k<48&&s===new Date(now.getTime()-86400000).toDateString()?'Kecha':d.getDate()+'.'+pad(d.getMonth()+1)))+'</div><div class="sl">';last=s}
-  h+='<button onclick="archGo('+i+','+d.getTime()+')">'+pad(d.getHours())+':00</button>'}
- $('sheetIn').innerHTML=h+'</div><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}
-function archGo(i,ms){var x=chans[i],s=Math.floor(ms/1000),n=Math.floor(Date.now()/1000);closeSheet();
- openVlc(x.url+(x.url.indexOf('?')>=0?'&':'?')+'utc='+s+'&lutc='+n,x.name)}
-function closeSheet(){$('sheet').style.display='none'}
-function settings(){$('sheetIn').innerHTML='<h3>Sozlamalar</h3><p style="color:#aaa;font-size:14px">Token: <b style="color:#eee">'+esc(token())+'</b></p>'+
- '<button class="btn" onclick="closeSheet();login()">Tokenni almashtirish</button><a class="btn gr" href="'+VLC_STORE+'">VLC ni o\'rnatish</a>'+
- '<p style="color:#888;font-size:13px">Kanal bosilganda VLC ochiladi. Ro\'yxatga qaytish uchun ekranning chap yuqori burchagidagi «◀ Safari» ni bosing.</p><button class="btn gr" onclick="closeSheet()">Yopish</button>';$('sheet').style.display='flex'}
-start();
-</script></body></html>
+  // Brauzer rejimida HLS/TS kutubxonalari (TV larda kerak emas)
+  if (U.platform === 'browser') document.write('<script src="lib/hls.min.js"><\/script><script src="lib/mpegts.js"><\/script>');
+</script>
+<script>/* M3U / M3U8 pleylist parseri */
+var M3U = (function () {
+  'use strict';
+
+  function attrs(str) {
+    var re = /([\w-]+)\s*=\s*"([^"]*)"/g, m, o = {};
+    while ((m = re.exec(str))) o[m[1].toLowerCase()] = m[2];
+    return o;
+  }
+
+  // Natija: { epgUrl: '', channels: [{num,name,url,logo,group,tvgId,tvgName,shift}] }
+  function parse(text) {
+    var lines = text.replace(/\r/g, '').split('\n');
+    var res = { epgUrl: '', channels: [] };
+    var cur = null, extgrp = '', i, line, a, comma, name, n = 0, hdrCatchup = {};
+
+    if (!/^\s*#EXTM3U/i.test(lines[0] || '') && !/#EXTINF/i.test(text)) {
+      throw new Error('Bu M3U pleylist emas');
+    }
+
+    for (i = 0; i < lines.length; i++) {
+      line = lines[i].trim();
+      if (!line) continue;
+
+      if (/^#EXTM3U/i.test(line)) {
+        a = attrs(line);
+        res.epgUrl = a['url-tvg'] || a['x-tvg-url'] || a['tvg-url'] || '';
+        hdrCatchup = { type: a['catchup'] || a['catchup-type'] || '', days: a['catchup-days'] || '', source: a['catchup-source'] || '' };
+        continue;
+      }
+      if (/^#EXTINF/i.test(line)) {
+        a = attrs(line);
+        comma = line.lastIndexOf('",');
+        if (comma >= 0) comma += 1; else comma = line.indexOf(',');
+        name = comma >= 0 ? line.substring(comma + 1).trim() : '';
+        cur = {
+          name: name || a['tvg-name'] || 'Kanal',
+          logo: a['tvg-logo'] || a['logo'] || '',
+          group: a['group-title'] || '',
+          tvgId: a['tvg-id'] || '',
+          tvgName: a['tvg-name'] || '',
+          shift: parseFloat(a['tvg-shift'] || '0') || 0
+        };
+        // Arxiv (catchup) ma'lumotlari
+        var ct = (a['catchup'] || a['catchup-type'] || hdrCatchup.type || '').toLowerCase();
+        var cd = parseFloat(a['catchup-days'] || a['tvg-rec'] || a['timeshift'] || hdrCatchup.days || '0') || 0;
+        var cs = a['catchup-source'] || hdrCatchup.source || '';
+        if ((ct || cs) && cd > 0) cur.catchup = { type: ct || 'default', days: cd, source: cs };
+        var ua = a['user-agent'] || a['http-user-agent'], rf = a['http-referrer'] || a['referer'] || a['http-referer'];
+        if (ua || rf) { cur.headers = {}; if (ua) cur.headers['User-Agent'] = ua; if (rf) cur.headers['Referer'] = rf; }
+        extgrp = '';
+        continue;
+      }
+      if (/^#EXTGRP:/i.test(line)) { extgrp = line.substring(8).trim(); continue; }
+      // Ba'zi kanallar maxsus sarlavha talab qiladi (VLC va boshqa formatlar)
+      if (/^#EXTVLCOPT:/i.test(line)) {
+        var kv = line.substring(11).split('='), k = (kv.shift() || '').trim().toLowerCase(), v = kv.join('=').trim();
+        if (!cur) continue;
+        cur.headers = cur.headers || {};
+        if (k === 'http-user-agent') cur.headers['User-Agent'] = v;
+        else if (k === 'http-referrer' || k === 'http-referer') cur.headers['Referer'] = v;
+        else if (k === 'http-origin') cur.headers['Origin'] = v;
+        continue;
+      }
+      if (/^#EXTHTTP:/i.test(line)) {
+        if (!cur) continue;
+        try {
+          var h = JSON.parse(line.substring(9)), hk;
+          cur.headers = cur.headers || {};
+          for (hk in h) if (h.hasOwnProperty(hk)) cur.headers[hk.toLowerCase() === 'user-agent' ? 'User-Agent' : hk.toLowerCase() === 'referer' ? 'Referer' : hk] = String(h[hk]);
+        } catch (e) {}
+        continue;
+      }
+      if (line.charAt(0) === '#') continue;
+
+      // URL qatori
+      if (!cur) cur = { name: line, logo: '', group: '', tvgId: '', tvgName: '', shift: 0 };
+      var pipe = line.indexOf('|');
+      if (pipe > 0) {
+        var parts = line.substring(pipe + 1).split('&'), j, kvp;
+        cur.headers = cur.headers || {};
+        for (j = 0; j < parts.length; j++) {
+          kvp = parts[j].split('=');
+          if (kvp.length > 1) { try { cur.headers[kvp[0]] = decodeURIComponent(kvp.slice(1).join('=')); } catch (e) { cur.headers[kvp[0]] = kvp.slice(1).join('='); } }
+        }
+        line = line.substring(0, pipe);
+      }
+      cur.url = line;
+      if (!cur.group) cur.group = extgrp || 'Boshqa';
+      cur.num = ++n;
+      // Sevimlilar nom bo'yicha saqlanadi (link yangilansa ham yo'qolmaydi)
+      cur.id = U.hash(cur.name.toLowerCase());
+      res.channels.push(cur);
+      cur = null;
+    }
+    if (!res.channels.length) throw new Error('Pleylistda kanal topilmadi');
+    return res;
+  }
+
+  return { parse: parse };
+})();
+</script>
+<script>/* XMLTV EPG (teleko'rsatuv dasturi) */
+var EPG = (function () {
+  'use strict';
+
+  var progs = {};     // epgChannelId -> [{s,e,t,d}]
+  var byChannel = {}; // playlist channel.id -> epgChannelId
+  var loaded = false, loading = false;
+
+  function decode(s) {
+    return s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+      .replace(/&#(\d+);/g, function (m, c) { return String.fromCharCode(+c); })
+      .replace(/&amp;/g, '&').trim();
+  }
+
+  function norm(s) { return String(s || '').toLowerCase().replace(/[\s\-_.|:()\[\]]+/g, '').replace(/(hd|fhd|uhd|4k|sd)$/, ''); }
+
+  // "20261116100000 +0500" -> ms
+  function parseTime(s) {
+    var m = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?\s*([+-]\d{4})?/.exec(s);
+    if (!m) return 0;
+    var t = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+    if (m[7]) {
+      var sign = m[7].charAt(0) === '-' ? -1 : 1;
+      t -= sign * (parseInt(m[7].substr(1, 2), 10) * 60 + parseInt(m[7].substr(3, 2), 10)) * 60000;
+    }
+    return t;
+  }
+
+  function parse(xml, channels, extraShiftH) {
+    var now = Date.now(), from = now - 8 * 3600000, to = now + 40 * 3600000;
+    var shiftMs = (extraShiftH || 0) * 3600000;
+    var names = {}, ids = {}, i, c, m, k;
+
+    // <channel id=".."><display-name>..</display-name>
+    var reCh = /<channel\s+id="([^"]*)"[^>]*>([\s\S]*?)<\/channel>/g, reDn = /<display-name[^>]*>([\s\S]*?)<\/display-name>/g, dn;
+    while ((m = reCh.exec(xml))) {
+      ids[m[1]] = true;
+      reDn.lastIndex = 0;
+      while ((dn = reDn.exec(m[2]))) {
+        k = norm(decode(dn[1]));
+        if (k && !names[k]) names[k] = m[1];
+      }
+    }
+
+    // Playlist kanalini EPG kanaliga bog'lash
+    byChannel = {};
+    var want = {};
+    for (i = 0; i < channels.length; i++) {
+      c = channels[i];
+      var id = '';
+      if (c.tvgId && (ids[c.tvgId])) id = c.tvgId;
+      if (!id && c.tvgName) id = names[norm(c.tvgName)] || '';
+      if (!id) id = names[norm(c.name)] || '';
+      if (!id && c.tvgId) id = c.tvgId;
+      if (id) { byChannel[c.id] = { id: id, shift: c.shift || 0 }; want[id] = true; }
+    }
+
+    // <programme start stop channel>
+    progs = {};
+    var reP = /<programme\b([^>]*)>([\s\S]*?)<\/programme>/g, reA = /(\w+)="([^"]*)"/g, a, attrs, ti, de, s, e, list;
+    while ((m = reP.exec(xml))) {
+      attrs = {}; reA.lastIndex = 0;
+      while ((a = reA.exec(m[1]))) attrs[a[1]] = a[2];
+      if (!want[attrs.channel]) continue;
+      s = parseTime(attrs.start) + shiftMs; e = parseTime(attrs.stop) + shiftMs;
+      if (e < from || s > to) continue;
+      ti = /<title[^>]*>([\s\S]*?)<\/title>/.exec(m[2]);
+      de = /<desc[^>]*>([\s\S]*?)<\/desc>/.exec(m[2]);
+      list = progs[attrs.channel] || (progs[attrs.channel] = []);
+      list.push({ s: s, e: e, t: ti ? decode(ti[1]) : '', d: de ? decode(de[1]) : '' });
+    }
+    for (k in progs) if (progs.hasOwnProperty(k)) progs[k].sort(function (x, y) { return x.s - y.s; });
+    loaded = true;
+  }
+
+  /* ---- Android: katta EPG Java'da o'qiladi ---- */
+  var nativeCb = null, nativeArgs = null;
+  function N() { return window.BSTNative || window.BSTDesktop || null; }
+  // Kompyuter (Electron) versiyasi natijani postMessage orqali yuboradi
+  window.addEventListener('message', function (e) { if (e.data && e.data.bstEpgDone) nativeDone(e.data.err || null); });
+  function applyNative(data, channels, extraShiftH) {
+    var shiftMs = (extraShiftH || 0) * 3600000, ids = {}, i, c, id, k, l, out;
+    for (i = 0; i < (data.ids || []).length; i++) ids[data.ids[i]] = true;
+    var names = data.names || {};
+    byChannel = {};
+    for (i = 0; i < channels.length; i++) {
+      c = channels[i]; id = '';
+      if (c.tvgId && ids[c.tvgId]) id = c.tvgId;
+      if (!id && c.tvgName) id = names[norm(c.tvgName)] || '';
+      if (!id) id = names[norm(c.name)] || '';
+      if (id) byChannel[c.id] = { id: id, shift: c.shift || 0 };
+    }
+    progs = {};
+    for (k in data.p) if (data.p.hasOwnProperty(k)) {
+      l = data.p[k]; out = [];
+      for (i = 0; i < l.length; i++) out.push({ s: l[i][0] + shiftMs, e: l[i][1] + shiftMs, t: l[i][2], d: '' });
+      out.sort(function (x, y) { return x.s - y.s; });
+      progs[k] = out;
+    }
+    loaded = true;
+  }
+  function readNative() {
+    try { var t = N().epgData(); return t ? JSON.parse(t) : null; } catch (e) { return null; }
+  }
+  function loadNative(url, channels, shiftH, cb) {
+    var data = readNative(), fresh = data && data.url === url && Date.now() - data.time < 6 * 3600000;
+    if (data && data.url === url) { try { applyNative(data, channels, shiftH); if (cb) cb(null); cb = null; } catch (e) { } }
+    if (fresh) return;
+    var ids = {}, names = {}, i, c, maxDays = 1;
+    for (i = 0; i < channels.length; i++) {
+      c = channels[i];
+      if (c.tvgId) ids[c.tvgId] = 1;
+      if (c.tvgName) names[norm(c.tvgName)] = 1;
+      names[norm(c.name)] = 1;
+      if (c.catchup && c.catchup.days > maxDays) maxDays = c.catchup.days;
+    }
+    loading = true;
+    nativeArgs = { channels: channels, shiftH: shiftH, url: url };
+    nativeCb = cb;
+    N().epgLoad(JSON.stringify({ url: url, ids: Object.keys(ids), names: Object.keys(names),
+      pastH: Math.min(maxDays, 7) * 24 + 2, futureH: 30 }));
+  }
+  function nativeDone(err) {
+    loading = false;
+    var cb = nativeCb, a = nativeArgs; nativeCb = null;
+    if (!err && a) {
+      var data = readNative();
+      if (data) { try { applyNative(data, a.channels, a.shiftH); } catch (e) { err = e.message; } }
+      else err = 'EPG o\'qilmadi';
+    }
+    if (cb) cb(err || null);
+    else if (!err && window.App && App.refresh) App.refresh();
+  }
+
+  function load(url, channels, shiftH, cb) {
+    if (!url || loading) { if (cb) cb('EPG manzili yo\'q'); return; }
+    if (N() && N().epgLoad) return loadNative(url, channels, shiftH, cb);
+    loading = true;
+    U.fetchText(url, function (err, xml) {
+      loading = false;
+      if (err === 'juda katta') { loaded = true; progs = {}; byChannel = {}; }   // dasturisiz ishlaymiz (arxiv soat bo'yicha)
+      if (err) { if (cb) cb(err); return; }
+      try { parse(xml, channels, shiftH); } catch (e) { if (cb) cb(e.message); return; }
+      if (cb) cb(null);
+    }, 120000, 60000000);
+  }
+
+  // Kanal uchun dasturlar ro'yxati
+  function list(ch) {
+    var b = byChannel[ch.id];
+    if (!b) return [];
+    var l = progs[b.id] || [];
+    if (!b.shift) return l;
+    var sh = b.shift * 3600000, out = [], i;
+    for (i = 0; i < l.length; i++) out.push({ s: l[i].s + sh, e: l[i].e + sh, t: l[i].t, d: l[i].d });
+    return out;
+  }
+
+  // {now, next, nowIndex}
+  function current(ch) {
+    var l = list(ch), t = Date.now(), i;
+    for (i = 0; i < l.length; i++) {
+      if (l[i].s <= t && l[i].e > t) return { now: l[i], next: l[i + 1] || null, idx: i, list: l };
+    }
+    return { now: null, next: null, idx: -1, list: l };
+  }
+
+  return { load: load, list: list, current: current, isLoaded: function () { return loaded; }, _nativeDone: nativeDone };
+})();
+</script>
+<script>/* Pleyer: Tizen AVPlay / Android ExoPlayer (BSTNative) / brauzer (hls.js, mpegts.js) */
+var Player = (function () {
+  'use strict';
+
+  var listener = function () {};
+  var aspect = 'fit';
+  var buffer = 'mid';
+  // Bufer darajasi: jonli efirdan necha soniya orqada turish (uzilishga zaxira)
+  var BUF_SEC = { low: 10, mid: 20, high: 30 };
+  var curUrl = '';
+  function emit(ev, msg) { try { listener(ev, msg || ''); } catch (e) {} }
+
+  /* ---------- Android (ExoPlayer, Java tomonda) ---------- */
+  var android = {
+    init: function () { document.body.classList.remove('bg-black'); U.$('video').style.display = 'none'; },
+    play: function (url, headers, eng) {
+      var h = headers ? JSON.stringify(headers) : null;
+      if (window.BSTNative.playWithEngine) window.BSTNative.playWithEngine(url, h, eng || 'exo');
+      else if (h && window.BSTNative.playWithHeaders) window.BSTNative.playWithHeaders(url, h);
+      else window.BSTNative.play(url);
+    },
+    stop: function () { window.BSTNative.stop(); },
+    setAspect: function (m) { window.BSTNative.setAspect(m); },
+    setBuffer: function (b) { if (window.BSTNative.setBuffer) window.BSTNative.setBuffer(b); }
+  };
+
+  /* ---------- iPhone: kanal VLC pleyerida ochiladi ---------- */
+  var ios = {
+    init: function () { U.$('video').style.display = 'none'; document.body.classList.add('ios'); },
+    play: function (url) {
+      setTimeout(function () { emit('playing'); }, 300);
+      if (Date.now() - U.lastTap() > 1500) return;
+      var t = Date.now();
+      (window.__bstOpen || function (u) { location.href = u; })('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(url));
+      setTimeout(function () { if (!document.hidden && Date.now() - t < 2600) emit('novlc'); }, 2000);
+    },
+    stop: function () {}, setAspect: function () {}, setBuffer: function () {}
+  };
+
+  /* ---------- Tizen (Samsung AVPlay) ---------- */
+  var tizen = {
+    av: null,
+    init: function () {
+      U.$('video').style.display = 'none';
+      U.$('avplayHolder').innerHTML = '<object id="av" type="application/avplayer"></object>';
+      this.av = window.webapis && window.webapis.avplay;
+      if (!this.av) { emit('error', 'AVPlay topilmadi'); }
+    },
+    rect: function () {
+      var av = this.av;
+      try {
+        // AVPlay koordinatalari ekran (1920x1080) bo'yicha
+        av.setDisplayRect(0, 0, 1920, 1080);
+        av.setDisplayMethod(aspect === 'fill' ? 'PLAYER_DISPLAY_MODE_FULL_SCREEN' :
+          aspect === 'zoom' ? 'PLAYER_DISPLAY_MODE_CROPPED_FULL' : 'PLAYER_DISPLAY_MODE_LETTER_BOX');
+      } catch (e) {}
+    },
+    play: function (url, headers) {
+      var av = this.av, self = this;
+      if (!av) return;
+      try { av.stop(); } catch (e) {}
+      try { av.close(); } catch (e) {}
+      try {
+        av.open(url);
+        av.setListener({
+          onbufferingstart: function () { emit('buffering'); },
+          onbufferingcomplete: function () { emit('playing'); },
+          onstreamcompleted: function () { emit('ended'); },
+          onerror: function (e) { emit('error', String(e)); },
+          onevent: function () {}
+        });
+        self.rect();
+        var sec = BUF_SEC[buffer] || 20;
+        try { av.setBufferingParam('PLAYER_BUFFER_FOR_PLAY', 'PLAYER_BUFFER_SIZE_IN_SECOND', Math.min(sec, 10)); } catch (e) {}
+        try { av.setBufferingParam('PLAYER_BUFFER_FOR_RESUME', 'PLAYER_BUFFER_SIZE_IN_SECOND', Math.min(sec, 10)); } catch (e) {}
+        try { av.setTimeoutForBuffering(sec); } catch (e) {}
+        av.prepareAsync(function () {
+          if (curUrl !== url) return;
+          self.rect();
+          av.play();
+          emit('playing');
+          try { var dd = av.getDuration(); if (dd > 0 && dd < 180000) emit('stub', String(dd)); } catch (e) {}
+        }, function (e) { emit('error', String(e && e.name || e)); });
+      } catch (e) { emit('error', e.message || String(e)); }
+    },
+    stop: function () { var av = this.av; if (!av) return; try { av.stop(); } catch (e) {} try { av.close(); } catch (e) {} },
+    setAspect: function () { this.rect(); },
+    setBuffer: function () {}
+  };
+
+  /* ---------- Brauzer (sinov uchun va zaxira) ---------- */
+  var browser = {
+    v: null, hls: null, ts: null,
+    init: function () {
+      var v = this.v = U.$('video');
+      v.style.display = 'block';
+      document.body.classList.add('bg-black');
+      v.addEventListener('waiting', function () { emit('buffering'); });
+      v.addEventListener('playing', function () {
+        emit('playing');
+        // Ovoz bor, rasm yo'q — brauzer video formatini (masalan MPEG-2) ocholmadi
+        clearTimeout(browser.vt);
+        browser.vt = setTimeout(function () {
+          if (!v.paused && v.videoWidth === 0 && v.getAttribute('src') !== null) emit('codec', 'Bu qurilma video formatini qo\'llamaydi: video/mpeg2');
+        }, 4000);
+      });
+      v.addEventListener('loadedmetadata', function () {
+        // hls.js da jonli efir/yozuvni pleylistning o'zidan bilamiz (LEVEL_LOADED)
+        if (browser.hls) return;
+        var d = v.duration;
+        if (isFinite(d) && d > 0 && d < 180) emit('stub', String(Math.round(d * 1000)));
+      });
+      v.addEventListener('ended', function () { emit('ended'); });
+      v.addEventListener('error', function () { if (v.getAttribute('src')) emit('error', 'Video xatosi'); });
+    },
+    destroy: function () {
+      clearTimeout(this.vt);
+      if (this.hls) { try { this.hls.destroy(); } catch (e) {} this.hls = null; }
+      if (this.ts) { try { this.ts.destroy(); } catch (e) {} this.ts = null; }
+      var v = this.v; v.pause(); v.removeAttribute('src'); try { v.load(); } catch (e) {}
+    },
+    play: function (url) {
+      var v = this.v, self = this;
+      this.destroy();
+      emit('buffering');
+      var low = url.toLowerCase().split('?')[0];
+      var isHls = /\.m3u8?$/.test(low) || /m3u8/.test(url.toLowerCase());
+      var isTs = /\.ts$/.test(low) || (!isHls && !/\.(mp4|webm|mkv|mp3|aac)$/.test(low));
+      // LG webOS: TV ning o'z pleyeri HLS/TS ni yaxshiroq va yengilroq ijro etadi
+      if (U.platform === 'webos') {
+        v.src = url;
+        var pw = v.play(); if (pw && pw.catch) pw.catch(function () {});
+        self.setAspect(aspect);
+        return;
+      }
+      if (isHls && window.Hls && window.Hls.isSupported()) {
+        var h = this.hls = new window.Hls({ lowLatencyMode: false, liveDurationInfinity: true, maxBufferLength: 60,
+          manifestLoadingMaxRetry: 30, levelLoadingMaxRetry: 30, fragLoadingMaxRetry: 30, fragLoadingRetryDelay: 1000 });
+        h.on(window.Hls.Events.ERROR, function (ev, d) {
+          if (!d.fatal) return;
+          var code = d.response && d.response.code ? ' BAD_HTTP_STATUS ' + d.response.code : '';
+          if (d.type === window.Hls.ErrorTypes.MEDIA_ERROR) { try { h.recoverMediaError(); return; } catch (e) {} }
+          emit('error', 'HLS: ' + d.details + code);
+        });
+        h.on(window.Hls.Events.LEVEL_LOADED, function (ev, d) {
+          var det = d.details;
+          if (det && det.live === false && det.totalduration > 0 && det.totalduration < 180) emit('stub', String(Math.round(det.totalduration * 1000)));
+        });
+        h.loadSource(url); h.attachMedia(v);
+        h.on(window.Hls.Events.MANIFEST_PARSED, function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
+      } else if (isTs && window.mpegts && window.mpegts.isSupported()) {
+        var t = this.ts = window.mpegts.createPlayer({ type: 'mpegts', isLive: true, url: url }, { enableStashBuffer: true, liveBufferLatencyChasing: false });
+        t.on(window.mpegts.Events.ERROR, function (type, det) { emit('error', 'TS: ' + det); });
+        t.attachMediaElement(v); t.load();
+        var p2 = t.play(); if (p2 && p2.catch) p2.catch(function () {});
+      } else {
+        v.src = url;
+        var p3 = v.play(); if (p3 && p3.catch) p3.catch(function () {});
+      }
+      self.setAspect(aspect);
+    },
+    stop: function () { this.destroy(); },
+    setBuffer: function () {},
+    setAspect: function (m) { var v = this.v; v.className = m === 'fill' ? 'fit-fill' : m === 'zoom' ? 'fit-zoom' : ''; }
+  };
+
+  /* ---------- Windows (Electron + mpv) ---------- */
+  var desktop = {
+    m: null,
+    init: function () {
+      this.m = window.BSTDesktop.mpv;
+      document.body.classList.remove('bg-black');
+      // Windows: to'liq shaffof joy sichqonchani o'tkazib yuboradi (video oynasi fokusni oladi) — deyarli ko'rinmas fon
+      document.documentElement.style.background = 'rgba(0,0,0,0.012)';
+      U.$('video').style.display = 'none';
+      window.addEventListener('message', function (e) {
+        if (!e.data) return;
+        if (e.data.bstMpv) emit(e.data.bstMpv, e.data.msg || '');
+        if (e.data.bstWinMode) { if (e.data.bstWinMode === 'win') document.body.classList.add('deskwin'); else document.body.classList.remove('deskwin'); }
+      });
+    },
+    play: function (url, headers) { this.m.play(url, headers || null); },
+    stop: function () { this.m.stop(); },
+    setAspect: function (m) { this.m.aspect(m); },
+    setBuffer: function () {}
+  };
+
+  var isDesk = !!(window.BSTDesktop && window.BSTDesktop.hasMpv && window.BSTDesktop.mpv);
+  var impl = U.platform === 'android' ? android : U.platform === 'tizen' ? tizen : U.platform === 'ios' ? ios : isDesk ? desktop : browser; // webos -> browser
+
+  return {
+    init: function (fn) { listener = fn; impl.init(); },
+    play: function (url, headers, eng) { curUrl = url; impl.play(url, headers, eng); },
+    // Ovozni bir pog'ona o'zgartirish; yangi daraja (0..100) yoki -1
+    volumeStep: function (d) {
+      try {
+        if (U.platform === 'android' && window.BSTNative.volumeStep) return window.BSTNative.volumeStep(d);
+        if (isDesk) return window.BSTDesktop.mpv.volume(d);
+        if (U.platform === 'tizen' && window.tizen && tizen.tvaudiocontrol) {
+          if (d > 0) tizen.tvaudiocontrol.setVolumeUp(); else if (d < 0) tizen.tvaudiocontrol.setVolumeDown();
+          return tizen.tvaudiocontrol.getVolume();
+        }
+        var v = U.$('video');
+        v.volume = Math.max(0, Math.min(1, Math.round((v.volume + d * 0.0667) * 15) / 15));
+        return Math.round(v.volume * 100);
+      } catch (e) { return -1; }
+    },
+    seekBy: function (ms) {
+      try {
+        if (U.platform === 'android') { if (window.BSTNative.seekBy) window.BSTNative.seekBy(ms); return; }
+        if (isDesk) { window.BSTDesktop.mpv.seek(ms); return; }
+        if (U.platform === 'tizen' && window.webapis) { if (ms > 0) webapis.avplay.jumpForward(ms); else webapis.avplay.jumpBackward(-ms); return; }
+        var v = U.$('video'); v.currentTime = Math.max(0, v.currentTime + ms / 1000);
+      } catch (e) {}
+    },
+    togglePause: function () {
+      try {
+        if (U.platform === 'android') { if (window.BSTNative.togglePause) window.BSTNative.togglePause(); return; }
+        if (isDesk) { window.BSTDesktop.mpv.pause(); return; }
+        if (U.platform === 'tizen' && window.webapis) { var st = webapis.avplay.getState(); if (st === 'PLAYING') webapis.avplay.pause(); else webapis.avplay.play(); return; }
+        var v = U.$('video'); if (v.paused) v.play(); else v.pause();
+      } catch (e) {}
+    },
+    setDetectAu: function (on) { try { if (window.BSTNative && window.BSTNative.setDetectAu) window.BSTNative.setDetectAu(!!on); } catch (e) {} },
+    // Android: {bw, vbr, h, buf, state} — boshqalarda null
+    stats: function () {
+      try { if (U.platform === 'android' && window.BSTNative.stats) return JSON.parse(window.BSTNative.stats()); } catch (e) {}
+      try { if (isDesk) return JSON.parse(window.BSTDesktop.mpv.stats()); } catch (e) {}
+      return null;
+    },
+    hasEngines: function () { return U.platform === 'android' && !!(window.BSTNative && window.BSTNative.playWithEngine); },
+    stop: function () { curUrl = ''; impl.stop(); },
+    setAspect: function (m) { aspect = m; impl.setAspect(m); },
+    setBuffer: function (b) { buffer = b; impl.setBuffer(b); },
+    url: function () { return curUrl; },
+    // Android (Java) shu orqali hodisalarni yuboradi
+    _native: function (ev, msg) { emit(ev, msg); }
+  };
+})();
+</script>
+<script>//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+</script>
+<script>/* Mijoz hisobi: ID bo'yicha muddatni Google jadvaldan olish */
+var Account = (function () {
+  'use strict';
+  var C = window.BST_CONFIG || {};
+
+  function parseCsv(text) {
+    var rows = [], row = [], f = '', q = false, i, ch;
+    text = text.replace(/\r/g, '');
+    for (i = 0; i < text.length; i++) {
+      ch = text.charAt(i);
+      if (q) {
+        if (ch === '"') { if (text.charAt(i + 1) === '"') { f += '"'; i++; } else q = false; }
+        else f += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ',' || ch === ';' || ch === '\t') { row.push(f); f = ''; }
+      else if (ch === '\n') { row.push(f); rows.push(row); row = []; f = ''; }
+      else f += ch;
+    }
+    if (f || row.length) { row.push(f); rows.push(row); }
+    return rows;
+  }
+
+  // "16.12.2026", "2026-12-16", "16/12/2026" -> Date (kun oxiri)
+  function parseDate(s) {
+    s = String(s || '').trim();
+    var m = /^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/.exec(s);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1], 23, 59, 59);
+    m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3], 23, 59, 59);
+    return null;
+  }
+
+  function fmt(d) { return U.pad(d.getDate()) + '.' + U.pad(d.getMonth() + 1) + '.' + d.getFullYear(); }
+
+  function daysLeft(d) {
+    var t = new Date(); t.setHours(0, 0, 0, 0);
+    var e = new Date(d.getTime()); e.setHours(0, 0, 0, 0);
+    return Math.round((e - t) / 86400000);
+  }
+
+  // cb(info) — info: { id, until: Date|null, bot, found }
+  function load(userId, cb) {
+    var cached = U.store('acct');
+    function done(info) { cb(info); }
+    function fromCache() {
+      if (cached && cached.id === userId) done({ id: userId, until: cached.until ? new Date(cached.until) : null, bot: cached.bot || C.bot, found: cached.found, cached: true });
+      else done({ id: userId, until: null, bot: C.bot, found: false });
+    }
+    if (!userId || !C.accountSheetUrl) { fromCache(); return; }
+    var url = C.accountSheetUrl + (C.accountSheetUrl.indexOf('?') >= 0 ? '&' : '?') + '_=' + Date.now();
+    U.fetchText(url, function (err, text) {
+      if (err) { fromCache(); return; }
+      var rows = parseCsv(text), i, r, id = userId.toLowerCase().trim(), info = { id: userId, until: null, bot: C.bot, found: false };
+      for (i = 0; i < rows.length; i++) {
+        r = rows[i]; if (!r.length) continue;
+        var k = String(r[0] || '').trim().toLowerCase();
+        if (k === '#bot' && r[1]) info.bot = String(r[1]).trim();
+        else if (k === id) { info.found = true; info.until = parseDate(r[1]); }
+      }
+      U.store('acct', { id: userId, until: info.until ? info.until.getTime() : 0, bot: info.bot, found: info.found });
+      done(info);
+    }, 20000);
+  }
+
+  function botLink(bot, id) {
+    var b = String(bot || '').replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '');
+    return b ? 'https://t.me/' + b + (id ? '?start=' + encodeURIComponent(id) : '') : '';
+  }
+
+  return { load: load, daysLeft: daysLeft, fmt: fmt, botLink: botLink, warnDays: C.warnDays || 3 };
+})();
+</script>
+<script>/* Black Star TV — asosiy ilova */
+var App = (function () {
+  'use strict';
+
+  var $ = U.$;
+  var VERSION = '1.7.8';
+
+  var cfg = U.store('cfg') || {};
+  function def(k, v) { if (cfg[k] === undefined) cfg[k] = v; }
+  def('url', ''); def('epgUrl', ''); def('lastId', ''); def('aspect', 'fit'); def('autoLast', true); def('epgShift', 0); def('autostart', false); def('buffer', 'mid'); def('uiScale', 100); def('engine', 'auto'); def('detectAu', false); def('userId', ''); def('showSpeed', false); def('deint2', false); def('panelAlpha', 'def'); def('token', '');
+  function tokenTpl() { return (window.BST_CONFIG || {}).tokenUrl || ''; }
+  function tokenUrl(t) { return tokenTpl().replace('{token}', encodeURIComponent(t)); }
+  function saveCfg() { U.store('cfg', cfg); }
+
+  var favs = U.store('favs') || {};
+  var channels = [], groups = [], playlistEpg = '';
+  var playing = null, zapList = [], retry = 0;
+
+  // Panel holati
+  var P = { gi: 0, ci: 0, col: 1, ei: 0 };
+  var view = 'none'; // none | panel | settings | search | dialog
+  var prevView = 'none';
+
+  /* ================= UI yordamchilari ================= */
+  var toastT = 0;
+  function toast(msg, ms) {
+    var t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
+    clearTimeout(toastT); toastT = setTimeout(function () { t.classList.add('hidden'); }, ms || 2500);
+  }
+
+  var statusT = 0;
+  function status(msg, isErr, delay) {
+    var s = $('status');
+    clearTimeout(statusT);
+    if (!msg) { s.classList.add('hidden'); return; }
+    statusT = setTimeout(function () {
+      $('statusText').textContent = msg;
+      s.className = isErr ? 'error' : '';
+    }, delay || 0);
+  }
+
+  function logoHtml(ch, cls) {
+    var l = U.esc((ch.name || '?').charAt(0).toUpperCase());
+    if (ch.logo) return '<img src="' + U.esc(ch.logo) + '" onerror="this.parentNode.innerHTML=\'<span class=ltr>' + l + '</span>\'">';
+    return '<span class="ltr">' + l + '</span>';
+  }
+
+  function isFav(ch) { return !!favs[ch.id]; }
+
+  /* ================= Guruhlar ================= */
+  function buildGroups(search) {
+    var map = {}, order = [], i, c, g;
+    groups = [];
+    if (search) {
+      var q = search.toLowerCase(), res = [];
+      for (i = 0; i < channels.length; i++) if (channels[i].name.toLowerCase().indexOf(q) >= 0) res.push(channels[i]);
+      groups.push({ name: 'Qidiruv: ' + search, list: res, special: 'search' });
+    }
+    var fl = [];
+    for (i = 0; i < channels.length; i++) if (isFav(channels[i])) fl.push(channels[i]);
+    groups.push({ name: '★ Sevimlilar', list: fl, special: 'fav' });
+    groups.push({ name: 'Barcha kanallar', list: channels, special: 'all' });
+    for (i = 0; i < channels.length; i++) {
+      c = channels[i]; g = c.group;
+      if (!map[g]) { map[g] = []; order.push(g); }
+      map[g].push(c);
+    }
+    for (i = 0; i < order.length; i++) groups.push({ name: order[i], list: map[order[i]] });
+    // Rangli tugmasiz pultlar uchun: amallar guruhlar ro'yxatining oxirida
+    groups.push({ name: '\uD83D\uDD0D Qidiruv', list: [], action: 'search' });
+    groups.push({ name: '\uD83E\uDE7A Tekshirish', list: [], action: 'diag' });
+    groups.push({ name: '\u2699 Sozlamalar', list: [], action: 'settings' });
+  }
+
+  function groupIndex(special) {
+    for (var i = 0; i < groups.length; i++) if (groups[i].special === special) return i;
+    return 0;
+  }
+
+  /* ================= Pleylist yuklash ================= */
+  function loadPlaylist(cb) {
+    if (!cfg.url) { openSettings(true); return; }
+    status('Pleylist yuklanmoqda...');
+    U.fetchText(cfg.url, function (err, text) {
+      var fromCache = false;
+      if (err) {
+        var cached = U.store('plCache');
+        if (cached && cached.url === cfg.url) { text = cached.text; fromCache = true; }
+        else if (/Server javobi: (401|402|403|404|410)/.test(err) && cfg.url) { status(''); showExpired(); return; }
+        else { status(''); toast('Pleylist yuklanmadi: ' + err, 5000); openSettings(true); return; }
+      }
+      if (!fromCache && cfg.token && !/#EXTINF/.test(text || '')) { status(''); toast('Token bo\'yicha kanal topilmadi: token noto\'g\'ri yoki obuna tugagan', 6000); openSettings(true); return; }
+      var res;
+      try { res = M3U.parse(text); } catch (e) {
+        status(''); toast(e.message, 5000); openSettings(true); return;
+      }
+      if (!fromCache && text.length < 2500000) U.store('plCache', { url: cfg.url, text: text });
+      channels = res.channels; playlistEpg = res.epgUrl;
+      buildGroups();
+      status('');
+      if (fromCache) toast('Internet yo\'q — saqlangan ro\'yxat ochildi', 4000);
+      loadEpg();
+      if (cb) cb();
+    });
+  }
+
+  function loadEpg() {
+    if (U.platform === 'ios') return; // 300 MB EPG telefonga og'ir va http — o'tkazib yuboramiz
+    var url = cfg.epgUrl || playlistEpg;
+    if (!url) return;
+    url = url.split(',')[0].trim();
+    EPG.load(url, channels, cfg.epgShift, function (err) {
+      if (err) { if (cfg.epgUrl) toast('EPG yuklanmadi: ' + err, 4000); return; }
+      refreshVisible();
+    });
+  }
+
+  /* ================= Ijro ================= */
+  var gotFrame = false;
+  var archive = null; // {ch, prog, url} — arxivdan ko'rilayotgan ko'rsatuv
+
+  function startPlay(ch) {
+    gotFrame = false;
+    Player.play(archive && archive.ch === ch ? archive.url : ch.url, ch.headers);
+  }
+
+  /* ---- Arxiv (catchup) ---- */
+  function canArchive(ch, p) {
+    if (!ch || !ch.catchup || !p) return false;
+    var t = Date.now();
+    return p.s < t - 60000 && p.s >= t - ch.catchup.days * 86400000;
+  }
+  function archiveUrl(ch, p) {
+    var start = Math.floor(p.s / 1000), end = Math.floor(Math.min(p.e, Date.now()) / 1000);
+    var dur = Math.max(60, Math.floor(p.e / 1000) - start), now = Math.floor(Date.now() / 1000);
+    var url = ch.url, src = ch.catchup.source, sep = url.indexOf('?') >= 0 ? '&' : '?';
+    function fill(t) {
+      var d = new Date(p.s);
+      return t.replace(/\$?\{(utc|start|timestamp_start)\}/g, start)
+        .replace(/\$?\{(utcend|end)\}/g, start + dur)
+        .replace(/\$?\{duration\}/g, dur)
+        .replace(/\$?\{(lutc|now|timestamp)\}/g, now)
+        .replace(/\$?\{offset\}/g, now - start)
+        .replace(/\{Y\}/g, d.getFullYear()).replace(/\{m\}/g, U.pad(d.getMonth() + 1)).replace(/\{d\}/g, U.pad(d.getDate()))
+        .replace(/\{H\}/g, U.pad(d.getHours())).replace(/\{M\}/g, U.pad(d.getMinutes())).replace(/\{S\}/g, U.pad(d.getSeconds()));
+    }
+    if (src) {
+      if (src.charAt(0) === '?' || src.charAt(0) === '&') return fill(url + (src.charAt(0) === '?' ? sep : '&') + src.substring(1));
+      return fill(src);
+    }
+    var type = ch.catchup.type;
+    if (type === 'flussonic' || type === 'fs' || type === 'flussonic-hls') {
+      var m = /^(.*\/)([^\/?]+)\.m3u8(\?.*)?$/.exec(url);
+      if (m) return m[1] + m[2] + '-' + start + '-' + dur + '.m3u8' + (m[3] || '');
+      m = /^(.*\/)mpegts(\?.*)?$/.exec(url);
+      if (m) return m[1] + 'timeshift_abs-' + start + '.ts' + (m[2] || '');
+    }
+    return url + sep + 'utc=' + start + '&lutc=' + now;
+  }
+  function playArchive(ch, p) {
+    archive = { ch: ch, prog: p, url: archiveUrl(ch, p) };
+    if (window.console) console.log('archive', archive.url);
+    playing = ch; retry = 0; started = false;
+    clearTimeout(retryT); netBadge('');
+    if (view === 'panel') closePanel();
+    startPlay(ch);
+    showInfo();
+    clearTimeout(archiveT);
+    archiveT = setTimeout(function () { if (archive && !started) archiveFail(''); }, 20000);
+    toast('\uD83D\uDCFC Arxiv: ' + U.hhmm(new Date(p.s)) + ' ' + p.t + '  •  \u25C0\u25B6 — siljitish, ORQAGA — jonli efir', 5000);
+  }
+  var archiveT = 0;
+  // Server arxivni bermasa — sababini aytib, jonli efirga qaytamiz
+  function archiveFail(msg) {
+    clearTimeout(archiveT);
+    var m = /BAD_HTTP_STATUS (\d+)/.exec(String(msg || '')), code = m ? ' (server javobi: ' + m[1] + ')' : '';
+    var ch = archive && archive.ch;
+    archive = null;
+    if (ch) playChannel(ch);
+    toast('\uD83D\uDCFC Bu vaqt uchun arxiv topilmadi' + code + '. Provayder bu kanalni yoki shu vaqtni yozmagan bo\'lishi mumkin. Jonli efirga qaytildi.', 8000);
+  }
+  function backToLive() {
+    clearTimeout(archiveT);
+    var ch = archive && archive.ch;
+    archive = null;
+    if (ch) { playChannel(ch); toast('Jonli efir'); }
+  }
+
+  function playChannel(ch, list) {
+    if (!ch) return;
+    archive = null;
+    playing = ch; retry = 0; started = false;
+    clearTimeout(retryT); netBadge('');
+    if (list && list.length) zapList = list;
+    else if (!zapList.length) zapList = channels;
+    cfg.lastId = ch.id; saveCfg();
+    status('');
+    startPlay(ch);
+    showInfo();
+  }
+
+  function zap(d) {
+    if (!playing) return;
+    var l = zapList.length ? zapList : channels, i = l.indexOf(playing);
+    if (i < 0) { l = channels; i = l.indexOf(playing); }
+    i = (i + d + l.length) % l.length;
+    playChannel(l[i], l);
+  }
+
+  // Internet uzilishiga chidamlilik: cheksiz qayta ulanish, oxirgi kadr ekranda qoladi
+  var lastErr = '';
+  var authFail = {}, expiredShown = false;
+  var started = false, retryT = 0, DELAYS = [1, 2, 3, 5, 8, 10];
+  function netBadge(msg) {
+    var b = $('netBadge');
+    if (!msg) { b.classList.add('hidden'); return; }
+    $('netBadgeText').textContent = msg; b.classList.remove('hidden');
+  }
+  function reconnect(now) {
+    clearTimeout(retryT);
+    if (!playing) return;
+    var ch = playing, d = now ? 0 : DELAYS[Math.min(retry, DELAYS.length - 1)] * 1000;
+    retry++;
+    var off = navigator.onLine === false;
+    var why = lastErr && retry > 2 ? ' [' + lastErr + ']' : '';
+    netBadge(off ? '\uD83D\uDD34 Internet yo\'q — router yoki kabelni tekshiring' : (retry > 3 ? 'Kanal ochilmayapti' : 'Internet sekin') + ' — qayta ulanmoqda...' + why);
+    retryT = setTimeout(function () { if (playing === ch) startPlay(ch); }, d);
+  }
+
+  function errText(m) {
+    m = String(m || '');
+    var map = {
+      ERROR_CODE_IO_BAD_HTTP_STATUS: 'server rad etdi',
+      ERROR_CODE_IO_NETWORK_CONNECTION_FAILED: 'ulanib bo\'lmadi',
+      ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT: 'server javob bermadi',
+      ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED: 'oqim formati noma\'lum',
+      ERROR_CODE_PARSING_MANIFEST_MALFORMED: 'pleylist buzuq',
+      ERROR_CODE_DECODER_INIT_FAILED: 'dekoder ishga tushmadi',
+      ERROR_CODE_DECODING_FORMAT_UNSUPPORTED: 'format qo\'llanmaydi',
+      ERROR_CODE_DRM_UNSPECIFIED: 'DRM himoyasi',
+      ERROR_CODE_DRM_LICENSE_ACQUISITION_FAILED: 'DRM litsenziyasi olinmadi'
+    };
+    var code = m.split(' ')[0];
+    return (map[code] ? map[code] + ' ' : '') + m.replace(/ERROR_CODE_/, '');
+  }
+
+  /* ---- Internet tezligi: qotganda sababini ko'rsatish ---- */
+  var spT = 0, bufSince = 0;
+  function mbps(b) { return b > 0 ? Math.round(b / 100000) / 10 : 0; }
+  function needMbps(st) {
+    if (st && st.vbr > 0) return Math.max(1.5, Math.round(st.vbr * 1.3 / 100000) / 10);
+    var h = st ? st.h : 0;
+    return h >= 1000 ? 6 : h >= 700 ? 4 : h > 0 ? 2.5 : 4;
+  }
+  function speedReason() {
+    if (navigator.onLine === false) return '\uD83D\uDD34 Internet yo\'q — router yoki kabelni tekshiring';
+    var st = Player.stats();
+    if (!st || !(st.bw > 0)) return 'Internet sekin — yuklanmoqda...';
+    var have = mbps(st.bw), need = needMbps(st);
+    if (have < need) return '\uD83D\uDD34 Internet: ' + have + ' Mbit/s — kam. Bu kanalga ~' + need + ' Mbit/s kerak';
+    return '\uD83D\uDFE1 Internet yaxshi (' + have + ' Mbit/s) — kanal serveri sekin javob bermoqda';
+  }
+  function startSpeedWatch() {
+    if (spT) return;
+    bufSince = Date.now();
+    spT = setInterval(function () {
+      if (Date.now() - bufSince > 2500) netBadge(speedReason());
+    }, 1500);
+  }
+  function stopSpeedWatch() { clearInterval(spT); spT = 0; }
+  // Doimiy tezlik ko'rsatkichi (Sozlamalar -> "Tezlikni ko'rsatish")
+  setInterval(function () {
+    var el = $('speedBadge');
+    if (!cfg.showSpeed || !playing) { el.classList.add('hidden'); return; }
+    var st = Player.stats();
+    if (!st) { el.classList.add('hidden'); return; }
+    var have = mbps(st.bw), need = needMbps(st);
+    el.textContent = '\u2B07 ' + have + ' Mbit/s' + (st.h ? '  \u2022  ' + st.h + 'p' : '') + '  \u2022  kerak ~' + need;
+    el.className = have && have < need ? 'low' : '';
+  }, 2000);
+
+  function onPlayer(ev, msg) {
+    if (ev === 'buffering') {
+      if (started) netBadge('Internet sekin — yuklanmoqda...');
+      else status('Yuklanmoqda...', false, 500);
+      startSpeedWatch();
+    } else if (ev === 'playing') {
+      stopSpeedWatch();
+      status(''); netBadge(''); retry = 0; started = true; lastErr = ''; clearTimeout(retryT);
+      authFail = {};
+    } else if (ev === 'novlc') {
+      dialog('VLC pleyeri ochilmadi.\nKanallar iPhone\'da bepul VLC ilovasida ko\'rsatiladi — App Store\'dan o\'rnating.', ['Yopish', 'VLC ni o\'rnatish'],
+        [null, function () { location.href = 'https://apps.apple.com/app/vlc-media-player/id650377962'; }]);
+    } else if (ev === 'stub') {
+      if (!archive && !expiredShown) { expiredShown = true; showExpired(); }
+    } else if (ev === 'firstframe') {
+      gotFrame = true;
+    } else if (ev === 'codec') {
+      // Video/ovoz formati qurilmada qo'llanmaydi — sababini ko'rsatamiz
+      var EXT = (window.BSTNative && window.BSTNative.openExternal) ? window.BSTNative : (window.BSTDesktop && window.BSTDesktop.openExternal) ? window.BSTDesktop : null;
+      if (msg.indexOf('video formatini') >= 0 && EXT && playing && view !== 'dialog') {
+        var ext = playing;
+        dialog('Bu kanal shu qurilmada ochilmaydi (' + msg.split(': ').pop() + ' formati).\nVLC pleyerida ochaymi?',
+          ['Yo\'q', 'VLC da ochish'], [null, function () { Player.stop(); EXT.openExternal(ext.url); }]);
+      } else toast(msg, 8000);
+    } else if (ev === 'error' && archive && !started) {
+      archiveFail(msg);
+    } else if (ev === 'error' || ev === 'ended') {
+      lastErr = errText(msg);
+      if (/BAD_HTTP_STATUS (401|402|403|410)/.test(String(msg)) && playing) {
+        authFail[playing.id] = 1;
+        var nFail = 0, kf; for (kf in authFail) if (authFail.hasOwnProperty(kf)) nFail++;
+        if (nFail >= 2 && !expiredShown) { expiredShown = true; showExpired(); }
+      }
+      status('');
+      reconnect(false);
+      if (window.console) console.log('player', ev, msg);
+    }
+  }
+
+  /* ================= Info panel ================= */
+  var infoT = 0;
+  function showInfo(keep) {
+    if (!playing) return;
+    var ch = playing, cur = EPG.current(ch);
+    if (archive && archive.ch === ch) {
+      var ap = archive.prog, nx = null, al = cur.list, ai;
+      for (ai = 0; ai < al.length; ai++) if (al[ai].s === ap.s) { nx = al[ai + 1] || null; break; }
+      cur = { now: ap, next: nx, idx: -1, list: al };
+    }
+    $('ibNum').textContent = ch.num;
+    $('ibLogo').innerHTML = logoHtml(ch);
+    $('ibName').textContent = (archive && archive.ch === ch ? '\uD83D\uDCFC ARXIV  ' : '') + ch.name;
+    $('ibFav').classList[isFav(ch) ? 'remove' : 'add']('hidden');
+    $('ibGroup').textContent = ch.group;
+    $('ibClock').textContent = U.hhmm(new Date());
+    if (cur.now) {
+      $('ibNowTime').textContent = U.hhmm(new Date(cur.now.s));
+      $('ibNowTitle').textContent = cur.now.t;
+      $('ibProgress').style.width = (archive ? 0 : Math.min(100, (Date.now() - cur.now.s) / (cur.now.e - cur.now.s) * 100)) + '%';
+    } else {
+      $('ibNowTime').textContent = ''; $('ibNowTitle').textContent = EPG.isLoaded() ? 'Dastur ma\'lumoti yo\'q' : '';
+      $('ibProgress').style.width = '0';
+    }
+    if (cur.next) {
+      $('ibNextTime').textContent = U.hhmm(new Date(cur.next.s)); $('ibNextTitle').textContent = cur.next.t;
+    } else { $('ibNextTime').textContent = ''; $('ibNextTitle').textContent = ''; }
+    $('infoBar').classList.remove('hidden');
+    clearTimeout(infoT);
+    if (!keep) infoT = setTimeout(hideInfo, 5000);
+  }
+  function hideInfo() { $('infoBar').classList.add('hidden'); }
+
+  /* ================= Kanallar paneli ================= */
+  var ROWS_G = 13, ROWS_C = 11, ROWS_E = 15;
+
+  function windowStart(sel, count, rows) {
+    var s = sel - Math.floor(rows / 2);
+    if (s > count - rows) s = count - rows;
+    return s < 0 ? 0 : s;
+  }
+
+  function curGroup() { return groups[P.gi] || { name: '', list: [] }; }
+
+  function renderGroups() {
+    var h = '', s = windowStart(P.gi, groups.length, ROWS_G), i, g;
+    for (i = s; i < Math.min(groups.length, s + ROWS_G); i++) {
+      g = groups[i];
+      h += '<div class="row' + (i === P.gi ? ' sel' : '') + '" data-g="' + i + '"><span class="txt">' + U.esc(g.name) + '</span><span class="cnt">' + (g.action ? '' : g.list.length) + '</span></div>';
+    }
+    $('groupList').innerHTML = h;
+  }
+
+  function renderChannels() {
+    var g = curGroup(), l = g.list, h = '', s = windowStart(P.ci, l.length, ROWS_C), i, c, cur, pr;
+    $('chHead').textContent = g.name;
+    $('chCount').textContent = l.length ? (P.ci + 1) + ' / ' + l.length : '';
+    for (i = s; i < Math.min(l.length, s + ROWS_C); i++) {
+      c = l[i]; cur = EPG.current(c);
+      pr = cur.now ? Math.min(100, (Date.now() - cur.now.s) / (cur.now.e - cur.now.s) * 100) : -1;
+      h += '<div class="row ch-row' + (i === P.ci ? ' sel' : '') + (c === playing ? ' playing' : '') + '" data-c="' + i + '">' +
+        '<span class="ch-num">' + c.num + '</span>' +
+        '<span class="ch-logo">' + logoHtml(c) + '</span>' +
+        '<div class="ch-body"><div class="ch-name">' + U.esc(c.name) + '</div>' +
+        (cur.now ? '<div class="ch-epg">' + U.esc(cur.now.t) + '</div><div class="ch-prog"><div style="width:' + pr + '%"></div></div>' : '') +
+        '</div>' + (isFav(c) ? '<span class="ch-star">★</span>' : '') + '</div>';
+    }
+    if (g.action) {
+      h = '<div class="epg-empty">OK yoki \u25B6 tugmasini bosing</div>';
+    } else if (!l.length) {
+      h = '<div class="epg-empty">' + (g.special === 'fav' ? 'Sevimli kanallar yo\'q.<br>Kanal ustida QIZIL tugmani bosing.' : 'Kanal topilmadi') + '</div>';
+    }
+    $('chList').innerHTML = h;
+    renderEpg();
+  }
+
+  /* EPG bo'lmasa ham arxiv: soatbay bo'laklar ro'yxati */
+  var DAYS_UZ = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
+  function dayLabel(d) {
+    var t = new Date(), y = new Date(t.getTime() - 86400000);
+    if (d.toDateString() === t.toDateString()) return 'Bugun';
+    if (d.toDateString() === y.toDateString()) return 'Kecha';
+    return DAYS_UZ[d.getDay()] + ' ' + U.pad(d.getDate()) + '.' + U.pad(d.getMonth() + 1);
+  }
+  var slotCache = { key: '', v: null };
+  function progList(c) {
+    var cur = EPG.current(c);
+    if (cur.list.length || !c || !c.catchup) return cur;
+    var H = 3600000, now = Date.now(), top = Math.floor(now / H) * H;
+    var key = c.id + ':' + top;
+    if (slotCache.key === key) return slotCache.v;
+    var days = Math.min(c.catchup.days || 1, 7), list = [], t, d;
+    for (t = top - days * 24 * H + H; t <= top; t += H) {
+      d = new Date(t);
+      list.push({ s: t, e: t + H, t: dayLabel(d) + ', ' + U.hhmm(d) + '\u2013' + U.hhmm(new Date(t + H)), slot: true });
+    }
+    slotCache = { key: key, v: { list: list, idx: list.length - 1, now: list[list.length - 1], next: null } };
+    return slotCache.v;
+  }
+
+  var epgT = 0;
+  function renderEpg(now) {
+    clearTimeout(epgT);
+    function draw() {
+      var c = curGroup().list[P.ci];
+      if (!c) { $('epgHead').textContent = ''; $('epgList').innerHTML = ''; return; }
+      $('epgHead').textContent = c.name + (c.catchup ? '  \uD83D\uDCFC' : '');
+      var cur = progList(c), l = cur.list, h = '', i, s, t = Date.now(), p, cls;
+      if (!l.length) {
+        $('epgList').innerHTML = '<div class="epg-empty">' + (EPG.isLoaded() ? 'Bu kanal uchun dastur ma\'lumoti yo\'q' : (cfg.epgUrl || playlistEpg ? 'Dastur yuklanmoqda...' : 'EPG manzili kiritilmagan')) + '</div>';
+        return;
+      }
+      if (P.col === 2) {
+        P.ei = Math.max(0, Math.min(l.length - 1, P.ei));
+        s = windowStart(P.ei, l.length, ROWS_E);
+      } else {
+        s = cur.idx >= 0 ? Math.max(0, cur.idx - 1) : 0;
+        if (cur.idx < 0) { for (i = 0; i < l.length; i++) if (l[i].s > t) { s = i; break; } }
+      }
+      for (i = s; i < Math.min(l.length, s + ROWS_E); i++) {
+        p = l[i];
+        cls = i === cur.idx ? ' now' : p.e <= t ? ' past' : '';
+        if (P.col === 2 && i === P.ei) cls += ' sel';
+        h += '<div class="row epg-row' + cls + '" data-e="' + i + '"><span class="t">' + U.hhmm(new Date(p.s)) + '</span><span class="txt">' + U.esc(p.t) + '</span>' +
+          (canArchive(c, p) ? '<span class="rec">\u25B6</span>' : '') + '</div>';
+      }
+      $('epgList').innerHTML = h;
+    }
+    if (now) draw(); else epgT = setTimeout(draw, 120);
+  }
+
+  // EPG ustunida tanlangan ko'rsatuvni ochish
+  function epgOk() {
+    var c = curGroup().list[P.ci]; if (!c) return;
+    var cur = progList(c), p = cur.list[P.ei];
+    if (!p) return;
+    if (P.ei === cur.idx && !canArchive(c, p)) { playChannel(c, curGroup().list); closePanel(); return; }
+    if (canArchive(c, p)) playArchive(c, p);
+    else if (p.s > Date.now()) toast('Bu ko\'rsatuv hali boshlanmagan');
+    else toast('Bu kanal uchun arxiv yo\'q');
+  }
+  function openEpgCol() {
+    var c = curGroup().list[P.ci]; if (!c) return;
+    var cur = progList(c);
+    if (!cur.list.length) { toast(EPG.isLoaded() ? 'Bu kanal uchun dastur yo\'q' : 'Dastur hali yuklanmagan'); return; }
+    if (cur.list[0] && cur.list[0].slot) toast('Dastur ma\'lumoti yo\'q — arxivni soat bo\'yicha tanlang', 4000);
+    if (!c.catchup) toast('Bu kanalda arxiv yo\'q, faqat dastur ko\'rinadi');
+    P.col = 2; P.ei = cur.idx >= 0 ? cur.idx : 0;
+    renderPanel(); renderEpg(true);
+  }
+
+  function renderPanel() {
+    $('panel').querySelector('.col-groups').className = 'col col-groups' + (P.col === 0 ? ' active' : '');
+    $('panel').querySelector('.col-channels').className = 'col col-channels' + (P.col === 1 ? ' active' : '');
+    $('panel').querySelector('.col-epg').className = 'col col-epg' + (P.col === 2 ? ' active' : '');
+    renderGroups(); renderChannels();
+  }
+
+  function openPanel() {
+    if (!channels.length) { openSettings(); return; }
+    // O'ynayotgan kanalga fokus
+    if (playing) {
+      var l = curGroup().list, i = l.indexOf(playing);
+      if (i < 0) { P.gi = groupIndex('all'); i = channels.indexOf(playing); }
+      P.ci = Math.max(0, i);
+    }
+    P.col = 1;
+    view = 'panel';
+    hideInfo();
+    $('panel').classList.remove('hidden');
+    $('clock').classList.remove('hidden');
+    renderPanel();
+  }
+
+  function closePanel() {
+    view = 'none';
+    $('panel').classList.add('hidden');
+    $('clock').classList.add('hidden');
+    if (groups[0] && groups[0].special === 'search') { buildGroups(); P.gi = groupIndex('all'); }
+  }
+
+  function moveSel(d) {
+    if (P.col === 0) {
+      P.gi = Math.max(0, Math.min(groups.length - 1, P.gi + d));
+      P.ci = 0;
+      renderGroups(); renderChannels();
+    } else {
+      var n = curGroup().list.length;
+      if (!n) return;
+      var ni = P.ci + d;
+      if (Math.abs(d) === 1) ni = (ni + n) % n; else ni = Math.max(0, Math.min(n - 1, ni));
+      P.ci = ni;
+      renderChannels();
+    }
+  }
+
+  function toggleFav(ch) {
+    if (!ch) return;
+    if (favs[ch.id]) { delete favs[ch.id]; toast('Sevimlilardan olindi: ' + ch.name); }
+    else { favs[ch.id] = 1; toast('Sevimlilarga qo\'shildi: ' + ch.name); }
+    U.store('favs', favs);
+    var gname = curGroup().special, focused = curGroup().list[P.ci];
+    var sq = groups[0] && groups[0].special === 'search' ? groups[0].name.substring(9) : '';
+    buildGroups(sq || undefined);
+    if (gname) P.gi = groupIndex(gname);
+    var l = curGroup().list, i = l.indexOf(focused);
+    P.ci = i >= 0 ? i : Math.min(P.ci, Math.max(0, l.length - 1));
+  }
+
+  function runGroupAction() {
+    var g = curGroup();
+    if (!g.action) return false;
+    if (g.action === 'search') openSearch();
+    else if (g.action === 'settings') { closePanel(); openSettings(); }
+    else if (g.action === 'diag') { openDiag(); }
+    return true;
+  }
+
+  /* ---- Kanal menyusi (▶ tugmasi bilan) ---- */
+  var C = { sel: 0, items: [], ch: null };
+  function openCtx(ch) {
+    if (!ch) return;
+    C.ch = ch; C.sel = 0;
+    C.items = [
+      { id: 'fav', lbl: isFav(ch) ? '\u2605 Sevimlilardan olish' : '\u2606 Sevimlilarga qo\'shish' },
+      { id: 'archive', lbl: ch.catchup ? '\uD83D\uDCFC Arxiv / dastur' : '\uD83D\uDCCB Dastur (EPG)' },
+      { id: 'aspect', lbl: '\u25A3 Ekran o\'lchami: ' + ASPECT_NAMES[cfg.aspect] },
+      { id: 'search', lbl: '\uD83D\uDD0D Qidiruv' },
+      { id: 'settings', lbl: '\u2699 Sozlamalar' }
+    ];
+    view = 'ctx';
+    $('ctxTitle').textContent = ch.name;
+    $('ctx').classList.remove('hidden');
+    renderCtx();
+  }
+  function renderCtx() {
+    var h = '', i;
+    for (i = 0; i < C.items.length; i++) h += '<div class="ctx-item' + (i === C.sel ? ' sel' : '') + '" data-m="' + i + '">' + U.esc(C.items[i].lbl) + '</div>';
+    $('ctxList').innerHTML = h;
+  }
+  function closeCtx() { $('ctx').classList.add('hidden'); view = 'panel'; renderPanel(); }
+  function ctxRun(i) {
+    var it = C.items[i]; if (!it) return;
+    if (it.id === 'fav') { toggleFav(C.ch); closeCtx(); }
+    else if (it.id === 'archive') { $('ctx').classList.add('hidden'); view = 'panel'; openEpgCol(); }
+    else if (it.id === 'aspect') { cycleAspect(); C.items[2].lbl = '\u25A3 Ekran o\'lchami: ' + ASPECT_NAMES[cfg.aspect]; renderCtx(); }
+    else if (it.id === 'search') { closeCtx(); openSearch(); }
+    else if (it.id === 'settings') { $('ctx').classList.add('hidden'); view = 'panel'; closePanel(); openSettings(); }
+  }
+  function ctxKey(k) {
+    if (k === 'up') { C.sel = Math.max(0, C.sel - 1); renderCtx(); }
+    else if (k === 'down') { C.sel = Math.min(C.items.length - 1, C.sel + 1); renderCtx(); }
+    else if (k === 'ok' || k === 'right') ctxRun(C.sel);
+    else if (k === 'back' || k === 'left') closeCtx();
+    else if (k === 'red') ctxRun(0);
+  }
+
+  function panelKey(k) {
+    if (P.col === 2) {
+      if (k === 'up') { P.ei--; renderEpg(true); }
+      else if (k === 'down') { P.ei++; renderEpg(true); }
+      else if (k === 'chup' || k === 'pageup') { P.ei -= ROWS_E; renderEpg(true); }
+      else if (k === 'chdown' || k === 'pagedown') { P.ei += ROWS_E; renderEpg(true); }
+      else if (k === 'ok') epgOk();
+      else if (k === 'left' || k === 'back') { P.col = 1; renderPanel(); }
+      return;
+    }
+    switch (k) {
+      case 'up': moveSel(-1); break;
+      case 'down': moveSel(1); break;
+      case 'chup': case 'pageup': moveSel(-ROWS_C); break;
+      case 'chdown': case 'pagedown': moveSel(ROWS_C); break;
+      case 'left': if (P.col === 1) { P.col = 0; renderPanel(); } break;
+      case 'right':
+        if (P.col === 0) { if (runGroupAction()) break; P.col = 1; P.ci = 0; renderPanel(); }
+        else openCtx(curGroup().list[P.ci]);
+        break;
+      case 'ok':
+        if (P.col === 0) { if (runGroupAction()) break; P.col = 1; P.ci = 0; renderPanel(); }
+        else {
+          var ch = curGroup().list[P.ci];
+          if (!ch) return;
+          if (ch === playing) { closePanel(); showInfo(); }
+          else { playChannel(ch, curGroup().list); closePanel(); }
+        }
+        break;
+      case 'back': closePanel(); break;
+      case 'red': if (P.col === 1) { toggleFav(curGroup().list[P.ci]); renderPanel(); } break;
+      case 'green': cycleAspect(); break;
+      case 'yellow': openSearch(); break;
+      case 'blue': case 'menu': closePanel(); openSettings(); break;
+    }
+  }
+
+  /* ================= Qidiruv ================= */
+  function openSearch() {
+    prevView = view; view = 'search';
+    $('search').classList.remove('hidden');
+    var i = $('searchInput'); i.value = '';
+    setTimeout(function () { i.focus(); }, 50);
+  }
+  function doSearch() {
+    var q = $('searchInput').value.trim();
+    $('searchInput').blur();
+    $('search').classList.add('hidden');
+    if (!q) { view = prevView === 'panel' ? 'panel' : 'none'; if (view === 'panel') renderPanel(); return; }
+    buildGroups(q);
+    P.gi = 0; P.ci = 0;
+    hideInfo();
+    $('panel').classList.remove('hidden');
+    $('clock').classList.remove('hidden');
+    view = 'panel'; P.col = 1; renderPanel();
+  }
+  function cancelSearch() {
+    $('searchInput').blur();
+    $('search').classList.add('hidden');
+    view = prevView === 'panel' ? 'panel' : 'none';
+  }
+
+  /* ================= Ekran o'lchami ================= */
+  var BUFS = ['low', 'mid', 'high'], BUF_NAMES = { low: 'Kichik (~10 s)', mid: 'O\'rta (~20 s)', high: 'Katta (~30 s)' };
+  var ASPECTS = ['fit', 'fill', 'zoom'], ASPECT_NAMES = { fit: 'Moslash', fill: 'To\'ldirish', zoom: 'Kattalashtirish' };
+  function cycleAspect() {
+    cfg.aspect = ASPECTS[(ASPECTS.indexOf(cfg.aspect) + 1) % 3]; saveCfg();
+    Player.setAspect(cfg.aspect);
+    toast('Ekran: ' + ASPECT_NAMES[cfg.aspect]);
+  }
+
+  /* ================= Raqam bilan kanal ================= */
+  var numBuf = '', numT = 0;
+  function numKey(d) {
+    if (numBuf.length >= 4) numBuf = '';
+    numBuf += d;
+    var n = parseInt(numBuf, 10), ch = channels[n - 1];
+    $('numEntry').innerHTML = U.esc(numBuf) + (ch ? '<small>' + U.esc(ch.name) + '</small>' : '');
+    $('numEntry').classList.remove('hidden');
+    clearTimeout(numT);
+    numT = setTimeout(numGo, 2000);
+  }
+  function numGo() {
+    clearTimeout(numT);
+    var n = parseInt(numBuf, 10), ch = channels[n - 1];
+    numBuf = '';
+    $('numEntry').classList.add('hidden');
+    if (ch) { playChannel(ch, channels); if (view === 'panel') closePanel(); }
+    else if (n) toast(n + '-raqamli kanal yo\'q');
+  }
+
+  /* Menyu (OK) foni shaffofligi: 'def' — odatiy, aks holda shaffoflik foizi */
+  function applyPanelAlpha() {
+    var el = $('panel'), v = cfg.panelAlpha;
+    if (!el) return;
+    if (v === 'def' || v === undefined) { el.style.background = ''; el.classList.remove('see'); return; }
+    var a = Math.max(0, Math.min(1, (100 - (+v)) / 100)), b = (a * 0.96).toFixed(2);
+    el.style.background = 'linear-gradient(90deg, rgba(6,6,8,' + a.toFixed(2) + ') 0%, rgba(6,6,8,' + b + ') 75%, rgba(6,6,8,0) 92%)';
+    if (+v >= 40) el.classList.add('see'); else el.classList.remove('see');
+  }
+
+  /* ================= Sozlamalar ================= */
+  var S = { items: [], sel: 0, first: false, editing: null };
+
+  function settingsItems() {
+    var it = [];
+    if (tokenTpl()) it.push({ id: 'token', lbl: 'IPTV token (1 cent)', type: 'input', ph: 'masalan: fJr1biXQcd' });
+    it = it.concat([
+      { id: 'url', lbl: 'Pleylist (M3U) manzili', type: 'input', ph: 'http://...' },
+      { id: 'userId', lbl: 'Sizning ID', type: 'input', ph: 'masalan: box988' },
+      { id: 'epgUrl', lbl: 'EPG manzili', type: 'input', ph: 'Bo\'sh qolsa — pleylistdagisi' },
+      { id: 'save', lbl: 'Saqlash va yuklash', type: 'btn' },
+      { id: 'diag', lbl: '\uD83E\uDE7A Tekshirish (internet tezligi)', type: 'action' },
+      { id: 'showSpeed', lbl: 'Tezlikni doim ko\'rsatish', type: 'bool' },
+      { id: 'uiScale', lbl: 'Interfeys o\'lchami', type: 'choice', opts: [100, 95, 90, 85, 80], names: { 100: '100%', 95: '95%', 90: '90%', 85: '85%', 80: '80%' } },
+      { id: 'panelAlpha', lbl: 'Menyu shaffofligi', type: 'choice', opts: ['def', 20, 40, 60, 80], names: { def: 'Odatiy', 20: '20%', 40: '40%', 60: '60%', 80: '80%' } },
+      { id: 'aspect', lbl: 'Ekran o\'lchami', type: 'choice', opts: ASPECTS, names: ASPECT_NAMES },
+      { id: 'buffer', lbl: 'Bufer (internet uzilsa)', type: 'choice', opts: BUFS, names: BUF_NAMES },
+      { id: 'autoLast', lbl: 'Oxirgi kanaldan boshlash', type: 'bool' },
+      { id: 'epgShift', lbl: 'EPG vaqtini siljitish', type: 'shift' }
+    ]);
+    if (window.BSTNative && window.BSTNative.setDeint) it.push({ id: 'deint2', lbl: 'SD kanallarda chiziqlarni tekislash', type: 'bool' });
+    if (window.BSTNative && window.BSTNative.setDetectAu) it.push({ id: 'detectAu', lbl: 'Kadr chegarasini aniqlash', type: 'bool' });
+    if (U.platform === 'android') it.push({ id: 'autostart', lbl: 'Pristavka yoqilganda ochilsin', type: 'bool' });
+    if (canUpdate()) it.push({ id: 'upd', lbl: '\u2B06 Yangilanishni tekshirish', type: 'action' });
+    if (window.BSTDesktop && window.BSTDesktop.hasMpv) {
+      it.push({ id: 'winsize', lbl: '\uD83D\uDDD7 Oyna o\'lchami: to\'liq / katta / kichik (F11)', type: 'action' });
+      it.push({ id: 'winmin', lbl: '\u2796 Ilovani yashirish (pastga)', type: 'action' });
+    }
+    return it;
+  }
+
+  function openSettings(first) {
+    if (view === 'panel') closePanel();
+    hideInfo();
+    S.items = settingsItems(); S.first = !!first || !channels.length;
+    S.sel = 0; S.editing = null;
+    view = 'settings';
+    $('setSub').textContent = S.first ? (tokenTpl() ? 'Boshlash uchun IPTV token yoki pleylist (M3U) manzilini kiriting' : 'Boshlash uchun IPTV pleylist (M3U) manzilini kiriting') : 'Sozlamalar';
+    var de = document.documentElement;
+    $('setFoot').innerHTML = 'Versiya ' + VERSION + ' &nbsp;•&nbsp; ' + channels.length + ' ta kanal' +
+      ' &nbsp;•&nbsp; Qurilma ' + U.fmtId(U.deviceId()) + ' &nbsp;•&nbsp; Ekran ' + window.innerWidth + '×' + window.innerHeight + ' / ' + de.clientWidth + '×' + de.clientHeight + ' @' + (window.devicePixelRatio || 1) +
+      (((window.BST_CONFIG || {}).bot || (window.BST_CONFIG || {}).phone) ? '<br><b style="color:#f5b400">Yordam:</b> ' + U.esc((window.BST_CONFIG || {}).bot || '') + ((window.BST_CONFIG || {}).phone ? ' &nbsp;•&nbsp; ' + U.esc(BST_CONFIG.phone) : '') : '') +
+      '<br>OK — tahrirlash/tanlash &nbsp;•&nbsp; ◀ ▶ — qiymatni o\'zgartirish &nbsp;•&nbsp; ORQAGA — chiqish';
+    $('settings').classList.remove('hidden');
+    document.body.classList.add('solid');
+    renderSettings();
+  }
+
+  function settingVal(it) {
+    var v = cfg[it.id];
+    if (it.type === 'choice') return '<span class="arr" data-d="-1">◀</span>' + it.names[v] + '<span class="arr" data-d="1">▶</span>';
+    if (it.type === 'bool') return '<span class="arr" data-d="-1">◀</span>' + (v ? 'Ha' : 'Yo\'q') + '<span class="arr" data-d="1">▶</span>';
+    if (it.type === 'shift') return '<span class="arr" data-d="-1">◀</span>' + (v > 0 ? '+' : '') + v + ' soat<span class="arr" data-d="1">▶</span>';
+    return '';
+  }
+
+  function renderSettings() {
+    var h = '', i, it;
+    for (i = 0; i < S.items.length; i++) {
+      it = S.items[i];
+      if (it.type === 'btn') { h += '<div class="set-item btn' + (i === S.sel ? ' sel' : '') + '" data-s="' + i + '">' + U.esc(it.lbl) + '</div>'; continue; }
+      if (it.type === 'action') { h += '<div class="set-item' + (i === S.sel ? ' sel' : '') + '" data-s="' + i + '"><span class="lbl">' + U.esc(it.lbl) + '</span><span class="val"><span class="arr">\u25B6</span></span></div>'; continue; }
+      h += '<div class="set-item' + (i === S.sel ? ' sel' : '') + '" data-s="' + i + '"><span class="lbl">' + U.esc(it.lbl) + '</span><span class="val">' +
+        (it.type === 'input' ? '<input type="' + (it.id === 'userId' || it.id === 'token' ? 'text' : 'url') + '" id="in_' + it.id + '" value="' + U.esc(cfg[it.id]) + '" placeholder="' + U.esc(it.ph) + '">' : settingVal(it)) +
+        '</span></div>';
+    }
+    $('setItems').innerHTML = h;
+    // Tanlangan band doim ko'rinib tursin (ro'yxat ekrandan uzun)
+    var box = $('setItems'), se = box.querySelector('.sel');
+    if (se) {
+      if (se.offsetTop < box.scrollTop) box.scrollTop = se.offsetTop - 10;
+      else if (se.offsetTop + se.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = se.offsetTop + se.offsetHeight - box.clientHeight + 10;
+    }
+  }
+
+  function readInputs() {
+    var e1 = $('in_url'), e2 = $('in_epgUrl');
+    if (e1) cfg.url = e1.value.trim();
+    if (e2) cfg.epgUrl = e2.value.trim();
+    var e3 = $('in_userId');
+    if (e3) cfg.userId = e3.value.trim();
+    var e4 = $('in_token');
+    if (e4) cfg.token = e4.value.replace(/\s+/g, '');
+  }
+
+  function editInput(it) {
+    var el = $('in_' + it.id);
+    if (!el) return;
+    S.editing = el;
+    el.focus();
+    try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {}
+  }
+  function stopEdit() {
+    if (!S.editing) return;
+    readInputs();
+    S.editing.blur(); S.editing = null;
+  }
+
+  function changeSetting(it, d) {
+    if (it.type === 'choice') { cfg[it.id] = it.opts[(it.opts.indexOf(cfg[it.id]) + d + it.opts.length) % it.opts.length]; if (it.id === 'aspect') Player.setAspect(cfg.aspect); if (it.id === 'uiScale') U.setUiScale(cfg.uiScale); if (it.id === 'panelAlpha') applyPanelAlpha(); if (it.id === 'buffer') { Player.setBuffer(cfg.buffer); if (playing) startPlay(playing); } }
+    else if (it.type === 'bool') { cfg[it.id] = !cfg[it.id]; if (it.id === 'detectAu') { Player.setDetectAu(cfg.detectAu); if (playing) startPlay(playing); } if (it.id === 'autostart' && window.BSTNative && BSTNative.setAutostart) BSTNative.setAutostart(cfg.autostart); if (it.id === 'deint2' && window.BSTNative && BSTNative.setDeint) BSTNative.setDeint(cfg.deint2); }
+    else if (it.type === 'shift') { cfg.epgShift = Math.max(-12, Math.min(12, cfg.epgShift + d)); }
+    else return;
+    readInputs(); saveCfg(); renderSettings();
+  }
+
+  function saveSettings() {
+    readInputs();
+    // Pleylist maydoniga faqat token yozilgan bo'lsa ham tushunamiz
+    if (tokenTpl() && cfg.url && !/^https?:\/\//i.test(cfg.url) && /^[A-Za-z0-9]{6,24}$/.test(cfg.url)) { cfg.token = cfg.url; cfg.url = ''; }
+    if (cfg.token) {
+      if (!/^[A-Za-z0-9]{6,24}$/.test(cfg.token)) { toast('Token noto\'g\'ri: faqat harf va raqamlar bo\'ladi', 4000); S.sel = 0; renderSettings(); return; }
+      cfg.url = tokenUrl(cfg.token);
+    }
+    if (U.platform === 'ios' && !cfg.token && /^http:\/\//i.test(cfg.url)) {
+      cfg.url = cfg.url.replace(/^http:\/\/1lot\.tv\//i, 'https://1lot.tv/');
+      if (/^http:/i.test(cfg.url)) { toast('iPhone\'da http havola (masalan o4.vc) ochilmaydi — «IPTV token» qatoriga tokenni yozing. Tokenni sotuvchidan oling.', 7000); S.sel = 0; renderSettings(); return; }
+    }
+    if (!/^https?:\/\//i.test(cfg.url)) { toast('Pleylist manzili http:// yoki https:// bilan boshlanishi kerak', 4000); S.sel = 0; renderSettings(); return; }
+    saveCfg();
+    closeSettings();
+    showIds(); checkAccount(true);
+    var wasPlaying = playing;
+    loadPlaylist(function () {
+      var ch = null, i;
+      if (wasPlaying) for (i = 0; i < channels.length; i++) if (channels[i].id === wasPlaying.id) ch = channels[i];
+      playing = null; zapList = [];
+      P.gi = groupIndex('all'); P.ci = 0;
+      if (U.platform === 'ios') { playing = ch || channels[0]; zapList = channels; openPanel(); toast(channels.length + ' ta kanal yuklandi'); return; }
+      playChannel(ch || channels[0], channels);
+      toast(channels.length + ' ta kanal yuklandi');
+    });
+  }
+
+  function closeSettings() {
+    stopEdit();
+    $('settings').classList.add('hidden');
+    document.body.classList.remove('solid');
+    view = 'none';
+  }
+
+  function settingsKey(k) {
+    var it = S.items[S.sel];
+    if (S.editing) {
+      if (k === 'ok' || k === 'imedone' || k === 'down') { stopEdit(); S.sel = Math.min(S.items.length - 1, S.sel + 1); renderSettings(); }
+      else if (k === 'up') { stopEdit(); S.sel = Math.max(0, S.sel - 1); renderSettings(); }
+      else if (k === 'back' || k === 'imecancel') { stopEdit(); renderSettings(); }
+      return;
+    }
+    switch (k) {
+      case 'up': S.sel = Math.max(0, S.sel - 1); renderSettings(); break;
+      case 'down': S.sel = Math.min(S.items.length - 1, S.sel + 1); renderSettings(); break;
+      case 'left': changeSetting(it, -1); break;
+      case 'right': changeSetting(it, 1); break;
+      case 'ok':
+        if (it.type === 'input') editInput(it);
+        else if (it.type === 'btn') saveSettings();
+        else if (it.type === 'action') { readInputs(); saveCfg(); runAction(it.id); }
+        else changeSetting(it, 1);
+        break;
+      case 'back':
+        readInputs(); saveCfg();
+        if (S.first) askExit(); else closeSettings();
+        break;
+    }
+  }
+
+
+  /* ================= Avtomatik yangilanish (Android) ================= */
+  function canUpdate() { return !!(window.BSTNative && window.BSTNative.installUpdate && BST_CONFIG.updateUrl); }
+  function runAction(id) {
+    if (id === 'upd') { closeSettings(); checkUpdate(true); }
+    else if (id === 'winsize') { window.BSTDesktop.fullscreen(); }
+    else if (id === 'winmin') { window.BSTDesktop.minimize(); }
+    else openDiag();
+  }
+  var updBusy = false;
+  function checkUpdate(manual) {
+    if (!canUpdate() || updBusy) return;
+    if (manual) toast('Yangilanish tekshirilmoqda...', 3000);
+    U.fetchText(BST_CONFIG.updateUrl + '?t=' + Date.now(), function (err, txt) {
+      var j = null, cur = 0;
+      if (!err) { try { j = JSON.parse(txt); } catch (e) { err = 'javob noto\'g\'ri'; } }
+      if (err || !j || !j.versionCode || !j.apk) { if (manual) toast('Tekshirib bo\'lmadi: ' + (err || 'ma\'lumot yo\'q'), 5000); return; }
+      try { cur = +window.BSTNative.versionCode(); } catch (e) { cur = 0; }
+      if (+j.versionCode <= cur) { if (manual) toast('Sizda eng yangi versiya: ' + VERSION, 4000); return; }
+      if (!manual && U.store('updSkip') === String(j.versionCode)) return;
+      dialog('Yangi versiya chiqdi: ' + (j.versionName || j.versionCode) + (j.notes ? '\n' + j.notes : '') + '\nHozir yangilaymizmi?',
+        ['Keyinroq', 'Yangilash'],
+        [function () { U.store('updSkip', String(j.versionCode)); }, function () { updBusy = true; status('Yangilanish yuklanmoqda... 0%'); window.BSTNative.installUpdate(j.apk); }]);
+    }, 20000);
+  }
+  // Java tomonidan: p:NN | perm | ok | err:...
+  function onUpdate(ev) {
+    if (ev.indexOf('p:') === 0) { status('Yangilanish yuklanmoqda... ' + ev.slice(2) + '%'); return; }
+    updBusy = false; status('');
+    if (ev === 'perm') toast('Ruxsat bering: «Noma\'lum manbalardan o\'rnatish» ni yoqing, keyin yana «Yangilash» ni bosing', 9000);
+    else if (ev === 'ok') toast('O\'rnatish oynasida «O\'rnatish» ni bosing', 6000);
+    else if (ev.indexOf('err:') === 0) toast('Yangilab bo\'lmadi: ' + ev.slice(4), 7000);
+  }
+
+
+  /* ================= Windows: ko'rinadigan boshqaruv tugmalari va yo'riqnoma ================= */
+  function initDesktopUi() {
+    var D = window.BSTDesktop;
+    if (!D || !D.hasMpv) return;
+    var bar = document.createElement('div');
+    bar.id = 'deskBar';
+    bar.innerHTML = '<span class="db" data-a="menu" title="Kanallar ro\'yxati (Enter)">☰ Kanallar</span>' +
+      '<span class="db" data-a="set" title="Sozlamalar">⚙</span>' +
+      '<span class="db" data-a="help" title="Yo\'riqnoma">?</span>' +
+      '<span class="db" data-a="size" title="Oyna o\'lchami (F11)">🗗</span>' +
+      '<span class="db" data-a="min" title="Yashirish">—</span>' +
+      '<span class="db x" data-a="exit" title="Chiqish">✕</span>';
+    document.body.appendChild(bar);
+    var t = 0;
+    function show() { bar.classList.add('on'); clearTimeout(t); t = setTimeout(function () { bar.classList.remove('on'); }, 3500); }
+    document.addEventListener('mousemove', show);
+    bar.addEventListener('click', function (e) {
+      var a = e.target.getAttribute('data-a'); e.stopPropagation();
+      if (a === 'menu') { if (view === 'none') openPanel(); else if (view === 'panel') closePanel(); }
+      else if (a === 'set') openSettings(false);
+      else if (a === 'help') deskHelp();
+      else if (a === 'size') D.fullscreen();
+      else if (a === 'min') D.minimize();
+      else if (a === 'exit') askExit();
+    });
+    // Pastdagi yo'llanma — klaviatura uchun
+    var h = document.querySelector('#panel .hints');
+    if (h) h.innerHTML = '<span><b class="kk">Enter</b>Ko\'rish</span><span><b class="kk">Esc</b>Orqaga</span>' +
+      '<span><b class="kk">← →</b>Ustunlar</span><span><b class="kk">F11</b>Oyna o\'lchami</span><span><b class="kk">🖱</b>Sichqoncha bilan ham bo\'ladi</span>';
+    if (!U.store('deskHelpShown')) { U.store('deskHelpShown', 1); setTimeout(deskHelp, 2500); }
+  }
+  function deskHelp() {
+    $('dialog').classList.add('wide');
+    dialog('Qanday ishlatiladi:\n' +
+      '• Enter yoki sichqoncha bosish — kanallar ro\'yxati, tanlash\n' +
+      '• ↑ ↓ — kanal almashtirish,  ← → — ustunlar\n' +
+      '• Esc — orqaga / chiqish\n' +
+      '• F11 — oyna o\'lchami: to\'liq ekran → katta → kichik\n' +
+      '• Oyna rejimida tepadagi tasmadan ushlab suring\n' +
+      '• Sichqonchani qimirlatsangiz, o\'ng tepada tugmalar chiqadi\n' +
+      '• Ovoz: + / − tugmalari yoki g\'ildirak',
+      ['Tushunarli'], [null]);
+  }
+
+  /* ================= Dialog ================= */
+  var D = { sel: 1, btns: [], fns: [] };
+  function dialog(text, btns, fns) {
+    prevView = view; view = 'dialog';
+    D.btns = btns; D.fns = fns; D.sel = 0;
+    $('dlgText').textContent = text;
+    $('dialog').classList.remove('hidden');
+    renderDialog();
+  }
+  function renderDialog() {
+    var h = '', i;
+    for (i = 0; i < D.btns.length; i++) h += '<div class="dlg-btn' + (i === D.sel ? ' sel' : '') + '" data-b="' + i + '">' + U.esc(D.btns[i]) + '</div>';
+    $('dlgBtns').innerHTML = h;
+  }
+  function closeDialog() { $('dialog').classList.add('hidden'); $('dialog').classList.remove('wide'); view = prevView; }
+  function dialogKey(k) {
+    if (k === 'left') { D.sel = Math.max(0, D.sel - 1); renderDialog(); }
+    else if (k === 'right') { D.sel = Math.min(D.btns.length - 1, D.sel + 1); renderDialog(); }
+    else if (k === 'ok') { var f = D.fns[D.sel]; closeDialog(); if (f) f(); }
+    else if (k === 'back') closeDialog();
+  }
+
+  function askExit() {
+    dialog('Ilovadan chiqasizmi?', ['Yo\'q', 'Ha, chiqish'], [null, exitApp]);
+  }
+  function exitApp() {
+    Player.stop();
+    try {
+      if (U.platform === 'tizen') tizen.application.getCurrentApplication().exit();
+      else if (U.platform === 'android') BSTNative.exit();
+      else if (U.platform === 'webos') { if (window.webOS && webOS.platformBack) webOS.platformBack(); else window.close(); }
+      else if (window.BSTDesktop) BSTDesktop.exit();
+      else toast('Brauzerda chiqish yo\'q');
+    } catch (e) {}
+  }
+
+  /* ================= Mijoz hisobi va muddat ================= */
+  var acct = null;
+  function displayId() { return cfg.userId || U.fmtId(U.deviceId()); }
+  function showIds() {
+    var d = displayId();
+    $('devIdPanel').textContent = d; $('devIdInfo').textContent = d; $('devIdSet').textContent = d;
+    $('verPanel').textContent = '\u2022 v' + VERSION; $('verSet').textContent = '\u2022 v' + VERSION;
+  }
+  function checkAccount(force) {
+    if (!cfg.userId) { $('devUntil').textContent = ''; return; }
+    Account.load(cfg.userId, function (info) {
+      acct = info;
+      var el = $('devUntil');
+      if (!info.until) { el.textContent = ''; el.className = 'dev-until'; return; }
+      var dl = Account.daysLeft(info.until);
+      el.textContent = 'Muddat: ' + Account.fmt(info.until) + (dl < 0 ? ' (tugagan)' : dl <= Account.warnDays ? ' (' + dl + ' kun)' : '');
+      el.className = 'dev-until' + (dl <= Account.warnDays ? ' warn' : '');
+      if (dl > Account.warnDays) return;
+      // Kuniga bir marta ogohlantirish; tugagan bo'lsa har ochilganda
+      var today = Account.fmt(new Date());
+      if (!force && dl >= 0 && U.store('warnDay') === today) return;
+      U.store('warnDay', today);
+      showPayWarn(dl);
+    });
+  }
+  function showPayWarn(dl, noDate) {
+    if (!acct || view === 'settings') return;
+    var expired = dl < 0;
+    $('payWarn').querySelector('.pw-box').className = 'pw-box' + (expired ? ' expired' : '');
+    $('pwTitle').textContent = expired ? '\u26D4 Obunangiz muddati tugagan' : dl === 0 ? '\u26A0 Obunangiz bugun tugaydi' : '\u26A0 Obunangiz ' + dl + ' kundan keyin tugaydi';
+    $('pwText').textContent = noDate || !acct.until ? 'Kanallar ochilmayapti — obunangiz tugagan bo\'lishi mumkin.' : 'Muddat: ' + Account.fmt(acct.until);
+    $('pwId').textContent = displayId();
+    var ph = (window.BST_CONFIG || {}).phone || '';
+    $('pwPhone').textContent = ph; $('pwPhoneLine').style.display = ph ? '' : 'none';
+    var link = Account.botLink(acct.bot, cfg.userId || U.deviceId());
+    $('pwBot').textContent = acct.bot ? (acct.bot.charAt(0) === '@' ? acct.bot : '@' + acct.bot.replace(/^https?:\/\/t\.me\//, '')) : 'Sotuvchiga murojaat qiling';
+    $('pwBotLine').style.display = acct.bot ? '' : 'none';
+    $('pwQrHint').style.display = link ? '' : 'none';
+    if (!acct.bot) $('pwBot').textContent = 'Obunani uzaytirish uchun sotuvchingizga murojaat qiling';
+    var q = $('pwQr');
+    q.innerHTML = '';
+    q.style.display = link && window.qrcode ? '' : 'none';
+    if (link && window.qrcode) {
+      try { var qr = window.qrcode(0, 'M'); qr.addData(link); qr.make(); q.innerHTML = qr.createImgTag(8, 0); } catch (e) { q.style.display = 'none'; }
+    }
+    if (view !== 'pay') prevView = view === 'panel' ? 'none' : view;
+    if (view === 'panel') closePanel();
+    hideInfo();
+    view = 'pay';
+    $('payWarn').classList.remove('hidden');
+  }
+  // Obuna tugaganini server javobidan bilganda (jadvalsiz)
+  function showExpired() {
+    acct = acct || { until: null, bot: (window.BST_CONFIG || {}).bot || '' };
+    if (!acct.bot) acct.bot = (window.BST_CONFIG || {}).bot || '';
+    showPayWarn(-1, true);
+  }
+  function closePayWarn() { $('payWarn').classList.add('hidden'); view = 'none'; }
+
+  /* ================= Tekshirish (diagnostika) ================= */
+  var diagRun = 0;
+  function diagRow(ic, cls, name, val) {
+    return '<div class="dg-row"><span class="ic">' + ic + '</span><span class="nm">' + U.esc(name) + '</span><span class="vl ' + cls + '">' + U.esc(val) + '</span></div>';
+  }
+  function xhrTime(url, timeout, cb) {
+    var x = new XMLHttpRequest(), t0 = Date.now(), done = false;
+    function fin(ok, info) { if (done) return; done = true; cb(ok, Date.now() - t0, info); }
+    try { x.open('GET', url, true); } catch (e) { fin(false, 'xato'); return; }
+    x.timeout = timeout;
+    x.onload = function () { fin(!x.status || (x.status >= 200 && x.status < 400), x.status); };
+    x.onerror = function () { fin(false, 'ulanmadi'); };
+    x.ontimeout = function () { fin(false, 'javob yo\'q'); };
+    x.send();
+  }
+  function speedTest(cb) {
+    var x = new XMLHttpRequest(), t0 = 0, loaded = 0, done = false;
+    function fin() { if (done) return; done = true; try { if (!loaded && x.response) loaded = x.response.byteLength || 0; } catch (e) {} try { x.abort(); } catch (e) {} var sec = (Date.now() - t0) / 1000; cb(sec > 0 && loaded > 0 ? Math.round(loaded * 8 / sec / 100000) / 10 : 0, loaded); }
+    try { x.open('GET', 'https://speed.cloudflare.com/__down?bytes=25000000&_=' + Date.now(), true); } catch (e) { cb(0, 0); return; }
+    x.responseType = 'arraybuffer';
+    x.onprogress = function (e) { if (!t0) t0 = Date.now(); loaded = e.loaded; };
+    x.onload = fin; x.onerror = fin; x.ontimeout = fin;
+    t0 = Date.now();
+    x.send();
+    setTimeout(fin, 8000);
+  }
+  function openDiag() {
+    if (view === 'panel') closePanel();
+    if (view === 'settings') closeSettings();
+    hideInfo();
+    view = 'diag';
+    $('diag').classList.remove('hidden');
+    var run = ++diagRun, rows = [], ph = (window.BST_CONFIG || {}).phone || '', bot = (window.BST_CONFIG || {}).bot || '';
+    var res = { online: navigator.onLine !== false, ping: 0, speed: 0, pl: null, st: Player.stats() };
+    function draw(final) {
+      if (run !== diagRun) return;
+      rows = [];
+      var on = res.online && (res.ping || res.pl || !res.cfFail);
+      if (res.cfFail && res.pl === false) on = false;
+      rows.push(diagRow(on ? '\u2705' : '\u274C', on ? 'ok' : 'bad', 'Internet aloqasi', on ? (res.ping ? 'bor (' + res.ping + ' ms)' : res.pl ? 'bor' : 'tekshirilmoqda...') : 'yo\'q'));
+      rows.push(diagRow(res.speed ? (res.speed >= 6 ? '\u2705' : res.speed >= 3 ? '\u26A0' : '\u274C') : '\u23F3', res.speed >= 6 ? 'ok' : res.speed >= 3 ? 'warn' : res.speed ? 'bad' : '',
+        'Internet tezligi', res.speed ? res.speed + ' Mbit/s' : (final ? 'o\'lchab bo\'lmadi' : 'o\'lchanmoqda (8 soniya)...')));
+      rows.push(diagRow(res.pl === null ? '\u23F3' : res.pl ? '\u2705' : '\u274C', res.pl ? 'ok' : res.pl === false ? 'bad' : '', 'Kanallar serveri', res.pl === null ? 'tekshirilmoqda...' : res.pl ? 'ishlayapti' : 'javob bermayapti'));
+      if (playing) {
+        var need = needMbps(res.st);
+        rows.push(diagRow('\uD83D\uDCFA', '', 'Joriy kanal', playing.name + ' — kerak ~' + need + ' Mbit/s'));
+        if (res.st && res.st.dec) rows.push(diagRow('\uD83C\uDF9E', '', 'Video dekoder', res.st.dec + (res.st.h ? '  •  ' + res.st.h + 'p' : '')));
+      }
+      rows.push(diagRow('\uD83C\uDD94', '', 'ID / Versiya', displayId() + '  •  ' + VERSION));
+      $('dgList').innerHTML = rows.join('');
+      var v = '';
+      if (final) {
+        if (!res.online || (res.cfFail && res.pl === false)) v = '<span class="bad">\u274C Internet yo\'q.</span> Router yoqilganini va kabel ulanganini tekshiring.';
+        else if (res.pl === false) v = '<span class="bad">\u274C Kanallar serveri javob bermayapti.</span> Obuna muddatini tekshiring yoki biz bilan bog\'laning.';
+        else if (res.speed && res.speed < 3) v = '<span class="bad">\u274C Internet juda sekin (' + res.speed + ' Mbit/s).</span> HD kanallar uchun kamida 6–8 Mbit/s kerak. Internet provayderingizga murojaat qiling.';
+        else if (res.speed && res.speed < 6) v = '<span class="warn">\u26A0 Internet o\'rtacha (' + res.speed + ' Mbit/s).</span> Oddiy kanallar ishlaydi, HD kanallar qotishi mumkin.';
+        else if (!res.speed) v = '<span class="warn">\u26A0 Tezlikni o\'lchab bo\'lmadi.</span> Internet va kanallar serveri ishlayapti.';
+        else v = '<span class="ok">\u2705 Hammasi joyida.</span> Agar baribir qotsa, Sozlamalarda "Bufer"ni "Katta" qiling.';
+      }
+      $('dgVerdict').innerHTML = v;
+      $('dgHelp').textContent = final ? 'Muammo bo\'lsa, shu ekranni rasmga olib ' + (bot ? bot + ' ga yuboring' + (ph ? ' yoki qo\'ng\'iroq qiling: ' + ph : '') : ph ? 'yuboring yoki qo\'ng\'iroq qiling: ' + ph : 'sotuvchingizga yuboring') : '';
+    }
+    draw(false);
+    xhrTime('https://speed.cloudflare.com/__down?bytes=1000&_=' + Date.now(), 6000, function (ok, ms) {
+      if (ok) res.ping = ms; else res.cfFail = true;
+      draw(false);
+      speedTest(function (sp) {
+        // O'lchab bo'lmasa — pleyerning o'z o'lchovidan foydalanamiz
+        if (!sp && res.st && res.st.bw > 0) sp = mbps(res.st.bw);
+        res.speed = sp; draw(false); maybeFinal();
+      });
+    });
+    var plDone = false, spDone = false;
+    function maybeFinal() { spDone = true; if (plDone) draw(true); }
+    if (cfg.url) xhrTime(cfg.url, 10000, function (ok) { res.pl = ok; plDone = true; draw(false); if (spDone) draw(true); });
+    else { res.pl = false; plDone = true; }
+  }
+  function closeDiag() { diagRun++; $('diag').classList.add('hidden'); view = 'none'; }
+
+  /* ================= Pult tugmalari ================= */
+  var KEYS = {
+    37: 'left', 38: 'up', 39: 'right', 40: 'down', 13: 'ok', 29443: 'ok',
+    10009: 'back', 27: 'back', 461: 'back', 8: 'back',
+    427: 'chup', 428: 'chdown', 33: 'pageup', 34: 'pagedown',
+    403: 'red', 404: 'green', 405: 'yellow', 406: 'blue',
+    457: 'info', 10135: 'menu', 18: 'menu', 10182: 'exit',
+    65376: 'imedone', 65385: 'imecancel',
+    412: 'rew', 417: 'ff', 10252: 'playpause', 415: 'playpause', 19: 'playpause'
+  };
+
+  function onKeyDown(e) {
+    var c = e.keyCode, k = KEYS[c];
+    var inInput = document.activeElement && document.activeElement.tagName === 'INPUT';
+    if (inInput) {
+      if (!k || (c === 8) || (c === 37 || c === 39)) return; // matn tahrirlash
+      if (view === 'search') {
+        if (k === 'ok' || k === 'imedone') { e.preventDefault(); doSearch(); }
+        else if (k === 'back' || k === 'imecancel') { e.preventDefault(); cancelSearch(); }
+        return;
+      }
+    }
+    if (!k && !inInput && (c === 187 || c === 107 || c === 189 || c === 109)) {   // + / − : ovoz
+      e.preventDefault(); showVolume(Player.volumeStep(c === 187 || c === 107 ? 1 : -1)); return;
+    }
+    if (!k) {
+      if (c >= 48 && c <= 57) k = String(c - 48);
+      else if (c >= 96 && c <= 105) k = String(c - 96);
+      else if (!inInput) {
+        var ch = String.fromCharCode(c).toLowerCase(); // klaviatura bilan sinash uchun
+        k = { r: 'red', g: 'green', y: 'yellow', b: 'blue', i: 'info', m: 'menu' }[ch];
+      }
+    }
+    if (!k) return;
+    e.preventDefault();
+    key(k);
+  }
+
+  function key(k) {
+    if (view === 'pay') { if (k === 'ok' || k === 'back') closePayWarn(); return; }
+    if (view === 'diag') { if (k === 'ok' || k === 'back') closeDiag(); return; }
+    if (view === 'dialog') return dialogKey(k);
+    if (view === 'ctx') return ctxKey(k);
+    if (view === 'settings') return settingsKey(k);
+    if (view === 'search') { if (k === 'back') cancelSearch(); return; }
+    if (k === 'exit') return exitApp();
+    if (/^\d$/.test(k)) return numKey(k);
+    if (numBuf && k === 'ok') return numGo();
+    if (view === 'panel') return panelKey(k);
+
+    // Arxiv ko'rilayotganda: ◀▶ — 30 soniya siljitish, ORQAGA — jonli efir
+    if (archive) {
+      if (k === 'left' || k === 'rew') { Player.seekBy(-30000); toast('\u23EA 30 s'); return; }
+      if (k === 'right' || k === 'ff') { Player.seekBy(30000); toast('30 s \u23E9'); return; }
+      if (k === 'playpause') { Player.togglePause(); return; }
+      if (k === 'back') { backToLive(); return; }
+    }
+    // Video ustida
+    switch (k) {
+      case 'ok': case 'left': openPanel(); break;
+      case 'up': case 'chup': case 'pageup': zap(1); break;
+      case 'down': case 'chdown': case 'pagedown': zap(-1); break;
+      case 'right': case 'info': showInfo(); break;
+      case 'red': toggleFav(playing); showInfo(); break;
+      case 'green': cycleAspect(); break;
+      case 'yellow': openSearch(); break;
+      case 'blue': case 'menu': openSettings(); break;
+      case 'back':
+        if (!$('infoBar').classList.contains('hidden')) hideInfo();
+        else askExit();
+        break;
+    }
+  }
+
+  function refreshVisible() {
+    if (view === 'panel') renderChannels();
+    if (!$('infoBar').classList.contains('hidden')) showInfo(true);
+  }
+
+  /* ================= Sensorli ekran / sichqoncha ================= */
+  function attr(el, name) {
+    while (el && el !== document) { if (el.getAttribute && el.getAttribute(name) !== null) return { el: el, v: el.getAttribute(name) }; el = el.parentNode; }
+    return null;
+  }
+  function inside(el, id) { while (el && el !== document) { if (el.id === id || (el.classList && el.classList.contains(id))) return true; el = el.parentNode; } return false; }
+
+  var swipe = { y: 0, startY: 0, acc: 0, moved: false, col: -1 };
+
+  function onTap(e) {
+    if (swipe.moved) { swipe.moved = false; return; }
+    var t = e.target, a;
+    if ((a = attr(t, 'data-k'))) { key(a.v); return; }
+    if (view === 'pay' || view === 'diag') return;
+
+    if (view === 'dialog') {
+      if ((a = attr(t, 'data-b'))) { D.sel = +a.v; dialogKey('ok'); }
+      return;
+    }
+    if (view === 'ctx') {
+      if ((a = attr(t, 'data-m'))) ctxRun(+a.v); else closeCtx();
+      return;
+    }
+    if (view === 'settings') {
+      if (!(a = attr(t, 'data-s'))) return;
+      var i = +a.v, it = S.items[i], d = attr(t, 'data-d');
+      if (S.editing && t !== S.editing) stopEdit();
+      S.sel = i;
+      if (it.type === 'input') { renderSettings(); editInput(it); return; }
+      if (it.type === 'btn') { saveSettings(); return; }
+      if (it.type === 'action') { readInputs(); saveCfg(); runAction(it.id); return; }
+      changeSetting(it, d ? +d.v : 1);
+      return;
+    }
+    if (view === 'search') { if (!inside(t, 'search-box')) cancelSearch(); return; }
+    if (view === 'panel') {
+      if ((a = attr(t, 'data-g'))) { P.col = 0; P.gi = +a.v; P.ci = 0; if (runGroupAction()) return; renderPanel(); return; }
+      if ((a = attr(t, 'data-c'))) { P.col = 1; P.ci = +a.v; panelKey('ok'); return; }
+      if ((a = attr(t, 'data-e'))) { P.col = 2; P.ei = +a.v; epgOk(); return; }
+      if (!inside(t, 'col-groups') && !inside(t, 'col-channels') && !inside(t, 'col-epg') && !inside(t, 'hints')) closePanel();
+      return;
+    }
+    if (numBuf) { numGo(); return; }
+    openPanel(); // video ustiga bosilsa — kanallar paneli
+  }
+
+  function listCol(t) { return inside(t, 'col-groups') ? 0 : inside(t, 'col-channels') ? 1 : -1; }
+  function scrollBy(col, d) {
+    if (view !== 'panel' || col < 0) return;
+    P.col = col;
+    moveSel(d);
+    renderPanel();
+  }
+  function onTouchStart(e) {
+    var p = e.touches[0];
+    swipe.y = swipe.startY = p.clientY; swipe.acc = 0; swipe.moved = false; swipe.col = listCol(e.target);
+    swipe.x = swipe.startX = p.clientX; swipe.accX = 0; swipe.dir = '';
+  }
+
+  // Ovoz ko'rsatkichi
+  var volT = 0;
+  function showVolume(v) {
+    if (v < 0) return;
+    $('volBar').style.width = v + '%';
+    $('volVal').textContent = v;
+    $('volBadge').classList.remove('hidden');
+    clearTimeout(volT);
+    volT = setTimeout(function () { $('volBadge').classList.add('hidden'); }, 1500);
+  }
+  function onTouchMove(e) {
+    var p = e.touches[0], dy = swipe.y - p.clientY, k = window.innerHeight / 1080, step = 90 * k;
+    swipe.y = p.clientY; swipe.acc += dy;
+    if (Math.abs(p.clientY - swipe.startY) > 15 * k) swipe.moved = true;
+    // Video ustida: gorizontal surish — ovoz (chapdan o'ngga — baland, o'ngdan chapga — past)
+    if (view === 'none') {
+      var dxAll = p.clientX - swipe.startX, dyAll = p.clientY - swipe.startY;
+      if (!swipe.dir && (Math.abs(dxAll) > 20 * k || Math.abs(dyAll) > 20 * k)) swipe.dir = Math.abs(dxAll) > Math.abs(dyAll) ? 'h' : 'v';
+      if (swipe.dir === 'h') {
+        e.preventDefault();
+        swipe.moved = true;
+        swipe.accX += p.clientX - swipe.x;
+        var vstep = 60 * (window.innerWidth / 1920);
+        while (swipe.accX > vstep) { swipe.accX -= vstep; showVolume(Player.volumeStep(1)); }
+        while (swipe.accX < -vstep) { swipe.accX += vstep; showVolume(Player.volumeStep(-1)); }
+      }
+      swipe.x = p.clientX;
+    }
+    if (view === 'panel') {
+      e.preventDefault();
+      while (swipe.acc > step) { swipe.acc -= step; scrollBy(swipe.col, 1); }
+      while (swipe.acc < -step) { swipe.acc += step; scrollBy(swipe.col, -1); }
+    }
+  }
+  function onTouchEnd(e) {
+    // Panel yopiq bo'lsa: tepaga/pastga surish — kanal almashtirish
+    if (view === 'none' && swipe.moved && swipe.dir !== 'h') {
+      var total = swipe.startY - e.changedTouches[0].clientY;
+      if (Math.abs(total) > window.innerHeight * 0.15) zap(total > 0 ? 1 : -1);
+    }
+    setTimeout(function () { swipe.moved = false; }, 80);
+  }
+  var wheelAcc = 0;
+  function onWheel(e) {
+    if (view === 'none') { showVolume(Player.volumeStep(e.deltaY < 0 ? 1 : -1)); return; }   // g'ildirak — ovoz
+    if (view !== 'panel') return;
+    wheelAcc += e.deltaY;
+    var col = listCol(e.target);
+    while (wheelAcc > 60) { wheelAcc -= 60; scrollBy(col, 1); }
+    while (wheelAcc < -60) { wheelAcc += 60; scrollBy(col, -1); }
+  }
+
+  function initTouch() {
+    var st = $('stage');
+    st.addEventListener('click', onTap);
+    st.addEventListener('touchstart', onTouchStart, false);
+    st.addEventListener('touchmove', onTouchMove, false);
+    st.addEventListener('touchend', onTouchEnd, false);
+    st.addEventListener('wheel', onWheel, false);
+  }
+
+  /* ================= Ishga tushirish ================= */
+  function tick() {
+    $('clock').textContent = U.hhmm(new Date());
+  }
+
+  function registerTizenKeys() {
+    try {
+      var keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'ChannelUp', 'ChannelDown', 'ColorF0Red', 'ColorF1Green', 'ColorF2Yellow', 'ColorF3Blue', 'Info', 'Tools', 'Exit', 'MediaRewind', 'MediaFastForward', 'MediaPlayPause', 'MediaPlay', 'MediaPause'];
+      if (tizen.tvinputdevice.registerKeyBatch) tizen.tvinputdevice.registerKeyBatch(keys);
+      else for (var i = 0; i < keys.length; i++) { try { tizen.tvinputdevice.registerKey(keys[i]); } catch (e) {} }
+    } catch (e) {}
+  }
+
+  function start() {
+    showIds();
+    checkAccount(false);
+    setInterval(function () { checkAccount(false); }, 6 * 3600000);
+    U.setUiScale(cfg.uiScale);
+    applyPanelAlpha();
+    U.watchFit();
+    document.addEventListener('keydown', onKeyDown, true);
+    initTouch();
+    initDesktopUi();
+    if (U.platform === 'tizen') registerTizenKeys();
+    $('clock').classList.add('hidden');
+    Player.init(onPlayer);
+    Player.setAspect(cfg.aspect);
+    Player.setBuffer(cfg.buffer);
+    Player.setDetectAu(cfg.detectAu);
+    if (window.BSTNative && BSTNative.setDeint) BSTNative.setDeint(cfg.deint2);
+    tick(); setInterval(tick, 10000);
+    setInterval(refreshVisible, 30000);
+    setInterval(loadEpg, 4 * 3600000);
+
+    // Internet qaytishi bilan darhol qayta ulanish
+    window.addEventListener('online', function () { if (playing && retry > 0) reconnect(true); });
+
+    document.addEventListener('visibilitychange', function () {
+      if (U.platform === 'android' || U.platform === 'ios') return; // Android o'zi boshqaradi; iPhone — VLC
+      if (document.hidden) Player.stop();
+      else if (playing) startPlay(playing);
+    });
+
+    setTimeout(function () { checkUpdate(false); }, 15000);
+    setInterval(function () { checkUpdate(false); }, 12 * 3600000);
+    if (!cfg.url) { openSettings(true); return; }
+    loadPlaylist(function () {
+      var ch = null, i;
+      if (cfg.autoLast && cfg.lastId) for (i = 0; i < channels.length; i++) if (channels[i].id === cfg.lastId) { ch = channels[i]; break; }
+      P.gi = groupIndex('all');
+      if (U.platform === 'ios') { playing = ch || channels[0]; zapList = channels; openPanel(); return; }
+      playChannel(ch || channels[0], channels);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+
+  return {
+    key: key,                                     // Android Java tomonidan chaqiriladi
+    onUpdate: onUpdate,
+    refresh: function () { refreshVisible(); },
+    onPause: function () { },
+    onResume: function () { if (playing) startPlay(playing); },
+    version: VERSION
+  };
+})();
+</script>
+</body>
+</html>
