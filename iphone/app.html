@@ -840,7 +840,9 @@ var Player = (function () {
       if (Date.now() - U.lastTap() > 1500) return;
       var t = Date.now();
       (window.__bstOpen || function (u) { location.href = u; })('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(url));
-      setTimeout(function () { if (!document.hidden && Date.now() - t < 2600) emit('novlc'); }, 2000);
+      var gone = false, mark = function () { gone = true; };
+      document.addEventListener('visibilitychange', mark); window.addEventListener('pagehide', mark); window.addEventListener('blur', mark);
+      setTimeout(function () { document.removeEventListener('visibilitychange', mark); window.removeEventListener('pagehide', mark); window.removeEventListener('blur', mark); if (!gone && !document.hidden) emit('novlc'); }, 9000);
     },
     stop: function () {}, setAspect: function () {}, setBuffer: function () {}
   };
@@ -3707,8 +3709,7 @@ var App = (function () {
       status(''); netBadge(''); retry = 0; started = true; lastErr = ''; clearTimeout(retryT);
       authFail = {};
     } else if (ev === 'novlc') {
-      dialog('VLC pleyeri ochilmadi.\nKanallar iPhone\'da bepul VLC ilovasida ko\'rsatiladi — App Store\'dan o\'rnating.', ['Yopish', 'VLC ni o\'rnatish'],
-        [null, function () { location.href = 'https://apps.apple.com/app/vlc-media-player/id650377962'; }]);
+      if (!window.__novlcShown) { window.__novlcShown = 1; toast('Kanal VLC pleyerida ochiladi. VLC yo\'q bo\'lsa — App Store\'dan bepul o\'rnating', 6000); }
     } else if (ev === 'stub') {
       if (!archive && !expiredShown) { expiredShown = true; showExpired(); }
     } else if (ev === 'firstframe') {
